@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>react组件的S.O.L.I.D原则 | Ryan&#39;s Blog</title>
+<noscript>开启Javascript是必要的</noscript>
+<link rel="icon" type="image/x-icon" href="/img/avatar.jpeg">
+<link rel="apple-touch-icon" href="/img/avatar.jpeg">
+<meta name="apple-mobile-web-app-title" content="Ryan&#39;s Blog">
+<link rel="bookmark" href="/img/avatar.jpeg">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="/img/avatar.jpeg">
+<meta name="description" content="&lt;p&gt;没有组件封装的react，一定是屎山代码。&lt;br&gt;react组件五个原则&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Single Responsibility 单一职责&lt;/li&gt;
+&lt;li&gt;Open-Closed 开闭原则&lt;/li&gt;
+&lt;li&gt;Liskov Subsitution 里氏替换&lt;/li&gt;
+&lt;li&gt;Interface Segregation 接口分离&lt;/li&gt;
+&lt;li&gt;Dependency Inversion 依赖倒转&lt;/li&gt;
+&lt;/ul&gt;">
+<meta name="theme-color" content="#1C1C1F">
+<link rel="stylesheet" href="/css/var.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    
+
+<link rel="stylesheet" href="/lib/snackbar.min.css">
+
+
+<script src="/lib/qrcode.min.js"></script>
+
+
+
+
+
+<script>var GLOBALCONFIG = {"root":"/","runtime":"2023-07-01 00:00:00","lazyload":{"enable":false,"error":"/img/acrylic.png"},"hightlight":{"enable":false,"limit":200},"lightbox":true,"randomlinks":false,"lang":{"theme":{"dark":"已切换至深色模式","light":"已切换至浅色模式"},"copy":{"success":"复制成功","error":"复制失败"},"backtop":"返回顶部","time":{"recent":"最近","yesterday":"昨天","berforeyesterday":"前天","daybefore":"天前","runtime":"天"},"sayhello":{"morning":"早上好","noon":"中午好","afternoon":"下午好","night":"晚上好","goodnight":"晚安","iam":"!  我是"},"search":{"empty":"搜索结果为空","hit":"已为您找到 ${query} 条结果","placeholder":"输入关键词快速查找"}},"covercolor":false,"comment":{"enable":false,"twikooUrl":null}};</script><script id="site-config">var PAGECONFIG = {"is_home":false,"is_post":true,"is_page":false,"page":false,"toc":true,"comment":false};</script>
+    <meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Ryan's Blog" type="application/atom+xml">
+</head>
+    <body id="body">
+        
+        <div id="console" style="zoom: 1;" class="">
+    <div class="close-btn" onclick="acrylic.hideConsole()" href="javascript:void(0);">
+        <i class="fas fa-circle-xmark"></i>
+    </div>
+    
+        <div class="console-card-group">
+            <div class="console-card-group-left">
+                <div class="console-card" id="card-newest-comments" onclick="acrylic.hideConsole()">
+                    <div class="card-content">
+                        <div class="author-content-item-tips">互动</div>
+                        <div class="author-content-item-title">最新评论</div>
+                    </div>
+                    <div class="aside-list"></div>
+                </div>
+    
+            </div>
+            <div class="console-card-group-right">
+                <div class="console-card tags" onclick="acrylic.hideConsole()">
+                    <div class="card-content">
+                        <div class="author-content-item-tips">标签</div>
+                        <div class="author-content-item-title">寻找感兴趣的领域</div>
+                    </div>
+                    <div class="card-tag-cloud">
+                        
+                            <a href="/tags/%E9%A5%A5%E8%8D%92/" style="font-size: 0.8rem; color: #d3d3d3">饥荒<sup>1</sup></a>
+                        
+                            <a href="/tags/react/" style="font-size: 0.8rem; color: #d3d3d3">react<sup>1</sup></a>
+                        
+                    </div>
+                </div>
+                <div class="console-card history" onclick="acrylic.hideConsole()">
+                    <ul class="card-archive-list">
+    
+     
+        <li class="card-archive-list-item"><a class="card-archive-list-link" onclick="pjax.loadUrl('/archives/2023-07/')" data-pjax-state=""><span
+            class="card-archive-list-date">2023-07</span>
+            <div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span
+                    class="card-archive-list-count-unit">篇</span></div>
+            </a>
+        </li>
+        
+</ul>
+
+                </div>
+            </div>
+        </div>
+    
+    
+    <div class="button-group">
+        <div class="console-btn-item"> <a class="darkmode_switchbutton" onclick="acrylic.switchDarkMode()" title="显示模式切换"
+                href="javascript:void(0);" rel="external nofollow" data-pjax-state=""><i class="fas fa-moon"
+                    style="font-size: 1rem;"></i></a></div>
+        
+    </div>
+    <div class="console-mask" onclick="acrylic.hideConsole()" href="javascript:void(0);" rel="external nofollow"></div>
+</div>
+        <div id="sidebar" style="zoom: 1;">
+    <div id="menu-mask" style="display: none;"></div>
+    <div id="sidebar-menus" class>
+        <span class="sidebar-menu-item-title">功能</span>
+        <div class="sidebar-menu-item">
+            <a class="darkmode_switchbutton menu-child" onclick="acrylic.switchDarkMode()" title="显示模式切换"
+                href="javascript:void(0);" rel="external nofollow">
+                <i class="fas fa-moon" style="font-size: 1rem;"></i>
+                <span>显示模式</span>
+            </a>
+        </div>
+        
+            <div class="back-menu-list-groups">
+    
+      
+      <div class="back-menu-list-group">
+        <div class="back-menu-list-title">
+          我的
+        </div>
+        <div class="back-menu-list">
+          
+            
+            <a class="back-menu-item" href="/" rel="external nofollow" title="博客">
+              <img class="back-menu-item-icon" src="/img/avatar.jpeg" loading="lazy">
+              <span class="back-menu-item-text">
+                博客
+              </span>
+            </a>
+          
+        </div>
+      </div>
+    
+  </div>
+  
+        
+        <div class="menus_items">
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 文库</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" href="/archives/">
+                                <i class="fas fa-box-archive"></i>
+                                <span> 文章列表</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/categories/">
+                                <i class="fas fa-cube"></i>
+                                <span> 全部分类</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/tags/">
+                                <i class="fas fa-tags"></i>
+                                <span> 全部标签</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 更多站点</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" target="_blank" rel="noopener" href="https://xhyx.ryanamigo.com">
+                                <i class="fas fa-keyboard"></i>
+                                <span> 在线小鹤音形练习</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+</div>
+        <span class="sidebar-menu-item-title">标签</span>
+        <div class="card-widget card-tags card-archives card-webinfo card-allinfo">
+            <div class="item-headline">
+                <i class="fas fa-tags"></i>
+                <span>标签</span>
+            </div>
+            <div class="card-tag-cloud">
+                
+                    <a href="/tags/%E9%A5%A5%E8%8D%92/" style="font-size: 1em; color: #d3d3d3">饥荒
+                        <sup>1</sup>
+                    </a>
+                
+                    <a href="/tags/react/" style="font-size: 1em; color: #d3d3d3">react
+                        <sup>1</sup>
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+</div>    
+        
+            <div class="post" id="body-wrap">
+                <header class="post-bg" id="page-header">
+    <nav id="nav" class="show">
+    <div id="nav-group">
+        <div id="blog_name">
+            
+                <div class="back-home-button" tabindex="-1">
+                    <i class="back-home-button-icon fas fa-grip-vertical"></i>
+                    <div class="back-menu-list-groups">
+    
+      
+      <div class="back-menu-list-group">
+        <div class="back-menu-list-title">
+          我的
+        </div>
+        <div class="back-menu-list">
+          
+            
+            <a class="back-menu-item" href="/" rel="external nofollow" title="博客">
+              <img class="back-menu-item-icon" src="/img/avatar.jpeg" loading="lazy">
+              <span class="back-menu-item-text">
+                博客
+              </span>
+            </a>
+          
+        </div>
+      </div>
+    
+  </div>
+  
+                </div>
+            
+            <a id="site-name" href="/" title="返回博客主页">
+                    
+            </a>
+        </div>
+        <div id="page-name-mask">
+            <div id="page-name">
+                <a id="page-name-text" onclick="acrylic.toTop()">react组件的S.O.L.I.D原则</a>
+            </div>
+        </div>
+        <div id="menus">
+            <div class="menus_items">
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 文库</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" href="/archives/">
+                                <i class="fas fa-box-archive"></i>
+                                <span> 文章列表</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/categories/">
+                                <i class="fas fa-cube"></i>
+                                <span> 全部分类</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/tags/">
+                                <i class="fas fa-tags"></i>
+                                <span> 全部标签</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 更多站点</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" target="_blank" rel="noopener" href="https://xhyx.ryanamigo.com">
+                                <i class="fas fa-keyboard"></i>
+                                <span> 在线小鹤音形练习</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+</div>
+        </div>
+        <!-- <div id="nav-left">
+            <div id="fps-group">
+                <div id="fps">145</div><span class="fpsText">FPS</span>
+            </div>
+        </div> -->
+        <div id="nav-right">
+            
+
+    <div class="nav-button" id="randomPost_button">
+        <a class="site-page" onclick="toRandomPost()"
+            title="随机前往一个文章">
+            <i class="fas fa-shuffle" style="font-size: 1rem;"></i>
+        </a>
+    </div>
+
+
+
+    <div class="nav-button" id="nav-console">
+        <a class="console_switchbutton" onclick="acrylic.showConsole()"
+        title="显示中控台" href="javascript:void(0);" rel="external nofollow">
+        <i class="fas fa-bars-progress" style="font-size: 1rem;"></i>
+        </a>
+    </div>
+
+<div class="nav-button" id="nav-totop" onclick="acrylic.toTop()">
+    <a class="totopbtn">
+        <i class="fas fa-arrow-up"></i>
+        <span id="percent">0</span>
+    </a>
+</div>
+<div id="toggle-menu">
+    <a class="site-page">
+        <i class="fas fa-bars fa-fw" style="font-size: 1rem;"></i>
+    </a>
+</div>
+        </div>
+    </div>
+</nav>
+    
+        <div class="coverdiv" id="coverdiv">
+    <img id="post-cover" class="nolazyload" src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/solid.png" alt="cover">
+</div>
+<div id="post-info">
+    <div id="post-firstinfo">
+        <div class="meta-firstline">
+            <a class="post-meta-original" title="该文章为原创文章，注意版权协议">
+                原创
+            </a>
+            
+            <span class="post-meta-categories">
+                
+                    <a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+                
+            </span>
+            
+            <div class="tag_share">
+                <div class="post-meta__tag-list">
+                    
+                        <a class="post-meta__tags" href="/tags/react/">
+                            <span class="tags-punctuation">#</span>
+                            <span class="tags-name">react</span>
+                        </a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="post-title">react组件的S.O.L.I.D原则</h1>
+    <div id="post-meta">
+        <div class="meta-secondline">
+            <span class="post-meta-date" title="发布于">
+                <i class="post-meta-icon fa-fw fas fa-calendar"></i>
+                <time datetime="2023-07-16T10:38:32+00:00"></time>
+            </span>
+            
+            
+                <span class="post-meta-position" title="作者IP归属地为西安">
+                    <i class="fas fa-location-dot post-meta-icon"></i>
+                    <span>西安</span>
+                </span>
+            
+            
+                
+                
+            
+            
+                
+        </div>
+    </div>
+</div>
+<section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg"
+    xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+    <defs>
+        <path id="gentle-wave"
+            d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path>
+    </defs>
+    <g class="parallax">
+        <use href="#gentle-wave" x="48" y="0"></use>
+        <use href="#gentle-wave" x="48" y="3"></use>
+        <use href="#gentle-wave" x="48" y="5"></use>
+        <use href="#gentle-wave" x="48" y="7"></use>
+    </g>
+</svg>
+</section>
+
+        
+</header>
+                <main class="layout" id="content-inner">
+    <div id="post">
+        <article class="post-content" id="article-container">
+            <p>没有组件封装的react，一定是屎山代码。<br>react组件五个原则</p>
+<ul>
+<li>Single Responsibility 单一职责</li>
+<li>Open-Closed 开闭原则</li>
+<li>Liskov Subsitution 里氏替换</li>
+<li>Interface Segregation 接口分离</li>
+<li>Dependency Inversion 依赖倒转</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="单一职责"><a href="#单一职责" class="headerlink" title="单一职责"></a>单一职责</h2><p>一个组件&#x2F;方法，只做一件事情。</p>
+<h3 id="反面案例"><a href="#反面案例" class="headerlink" title="反面案例"></a>反面案例</h3><p>很多人写react时候，时这样写的，所有的逻辑功能都放在一个文件中，导致其他人看这段代码时很头疼，要上下来回翻找。<br>功能很简单，就是按照评价等级筛选商品。</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;axios&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useEffect, useMemo, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Product</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./product&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Rating</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react-simple-star-rating&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Bad</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [products, setProducts] = <span class="title function_">useState</span>([]);</span><br><span class="line">  <span class="keyword">const</span> [filterRate, setFilterRate] = <span class="title function_">useState</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">fetchProducts</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> axios.<span class="title function_">get</span>(</span><br><span class="line">      <span class="string">&quot;https://fakestoreapi.com/products&quot;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (response &amp;&amp; response.<span class="property">data</span>) <span class="title function_">setProducts</span>(response.<span class="property">data</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">fetchProducts</span>();</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleRating</span> = (<span class="params">rate: <span class="built_in">number</span></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setFilterRate</span>(rate);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> filteredProducts = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span></span><br><span class="line">      products.<span class="title function_">filter</span>(</span><br><span class="line">        <span class="function">(<span class="params">product: <span class="built_in">any</span></span>) =&gt;</span> product.<span class="property">rating</span>.<span class="property">rate</span> &gt; filterRate</span><br><span class="line">      ),</span><br><span class="line">    [products, filterRate]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex flex-col h-full&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex flex-col justify-center items-center&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">className</span>=<span class="string">&quot;font-semibold&quot;</span>&gt;</span>Minimum Rating <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Rating</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">initialValue</span>=<span class="string">&#123;filterRate&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">SVGclassName</span>=<span class="string">&quot;inline-block&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onClick</span>=<span class="string">&#123;handleRating&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;h-full flex flex-wrap justify-center&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;filteredProducts.map((product: any) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;w-56 flex flex-col items-center m-2 max-w-sm bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">img</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">className</span>=<span class="string">&quot;p-8 rounded-t-lg h-48&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">src</span>=<span class="string">&#123;product.image&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">alt</span>=<span class="string">&quot;product image&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              /&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex flex-col px-5 pb-5&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">h5</span> <span class="attr">className</span>=<span class="string">&quot;text-lg font-semibold tracking-tight text-gray-900 dark:text-white&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  &#123;product.title&#125;</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">h5</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex items-center mt-2.5 mb-5 flex-1&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                &#123;Array(parseInt(product.rating.rate))</span></span><br><span class="line"><span class="language-xml">                  .fill(&quot;&quot;)</span></span><br><span class="line"><span class="language-xml">                  .map((_, idx) =&gt; (</span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">svg</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                      <span class="attr">aria-hidden</span>=<span class="string">&quot;true&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                      <span class="attr">className</span>=<span class="string">&quot;w-5 h-5 text-yellow-300&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                      <span class="attr">fill</span>=<span class="string">&quot;currentColor&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                      <span class="attr">viewBox</span>=<span class="string">&quot;0 0 20 20&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                      <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    &gt;</span></span></span><br><span class="line"><span class="language-xml">                      <span class="tag">&lt;<span class="name">title</span>&gt;</span>First star<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                      <span class="tag">&lt;<span class="name">path</span> <span class="attr">d</span>=<span class="string">&quot;M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">path</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  ))&#125;</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">span</span> <span class="attr">className</span>=<span class="string">&quot;bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  &#123;parseInt(product.rating.rate)&#125;</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex flex-col items-between justify-around&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">span</span> <span class="attr">className</span>=<span class="string">&quot;text-2xl font-bold text-gray-900 dark:text-white&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  $&#123;product.price&#125;</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">a</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">href</span>=<span class="string">&quot;#&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">className</span>=<span class="string">&quot;text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  // <span class="attr">onClick</span>=<span class="string">&#123;onAddToCart&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                &gt;</span></span></span><br><span class="line"><span class="language-xml">                  Add to cart</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面的例子中，有如下功能</p>
+<ol>
+<li>获取商品列表</li>
+<li>展示商品列表</li>
+<li>星级评价</li>
+<li>按星级评价筛选</li>
+</ol>
+<p>那就把这四个功能一一拆分</p>
+<p>当我们的代码出现了很多<code>useState</code>、<code>useEffect</code>、<code>useMemo</code>等hook，我们需要考虑把它封装成一个自定义的hook<br>比如一个product的<code>state</code>，一个获取商品的<code>effect</code>，一个获取商品的请求，可以把这三个封装在一个<code>useProduct</code>中，这样就拆分出了第一个功能–获取商品列表</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;axios&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useEffect, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">useProducts</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> [products, setProducts] = useState&lt;<span class="built_in">any</span>[]&gt;([]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">fetchProducts</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> axios.<span class="title function_">get</span>(</span><br><span class="line">      <span class="string">&quot;https://fakestoreapi.com/products&quot;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (response &amp;&amp; response.<span class="property">data</span>) <span class="title function_">setProducts</span>(response.<span class="property">data</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">fetchProducts</span>();</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123; products &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="组件拆分"><a href="#组件拆分" class="headerlink" title="组件拆分"></a>组件拆分</h3><p>jsx中有两部分，一个是商品的展示，另一个是星级筛选器的展示。</p>
+<p>商品展示部分可以拆分为<code>Product.tsx</code>，这样就拆分出了第二个功能–展示商品列表</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useMutation, useQueryClient &#125; <span class="keyword">from</span> <span class="string">&quot;@tanstack/react-query&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;axios&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> styled <span class="keyword">from</span> <span class="string">&quot;styled-components&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">IProduct</span> &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">price</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="attr">rating</span>: &#123; <span class="attr">rate</span>: <span class="built_in">number</span> &#125;;</span><br><span class="line">  <span class="attr">image</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">IProductProps</span> &#123;</span><br><span class="line">  <span class="attr">product</span>: <span class="title class_">IProduct</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Product</span>(<span class="params">props: IProductProps</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; product &#125; = props;</span><br><span class="line">  <span class="keyword">const</span> &#123; id, title, price, rating, image &#125; = product;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;w-56 flex flex-col items-center m-2 max-w-sm bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">img</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">className</span>=<span class="string">&quot;p-8 rounded-t-lg h-48&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">src</span>=<span class="string">&#123;image&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">alt</span>=<span class="string">&quot;product image&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex flex-col px-5 pb-5&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">h5</span> <span class="attr">className</span>=<span class="string">&quot;text-lg font-semibold tracking-tight text-gray-900 dark:text-white&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            &#123;title&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">h5</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex items-center mt-2.5 mb-5 flex-1&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;Array(Math.trunc(rating.rate))</span></span><br><span class="line"><span class="language-xml">            .fill(&quot;&quot;)</span></span><br><span class="line"><span class="language-xml">            .map((_, idx) =&gt; (</span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">svg</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">aria-hidden</span>=<span class="string">&quot;true&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">className</span>=<span class="string">&quot;w-5 h-5 text-yellow-300&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">fill</span>=<span class="string">&quot;currentColor&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">viewBox</span>=<span class="string">&quot;0 0 20 20&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              &gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">title</span>&gt;</span>First star<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">path</span> <span class="attr">d</span>=<span class="string">&quot;M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">path</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            ))&#125;</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">span</span> <span class="attr">className</span>=<span class="string">&quot;bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            &#123;Math.trunc(rating.rate)&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex flex-col items-between justify-around&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">span</span> <span class="attr">className</span>=<span class="string">&quot;text-2xl font-bold text-gray-900 dark:text-white&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            $&#123;price&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">a</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">href</span>=<span class="string">&quot;#&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">className</span>=<span class="string">&quot;text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            // <span class="attr">onClick</span>=<span class="string">&#123;onAddToCart&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &gt;</span></span></span><br><span class="line"><span class="language-xml">            Add to cart</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>星级筛选器的UI部分可以拆分为<code>Filter.tsx</code>。</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Rating</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react-simple-star-rating&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">IFilterProps</span> &#123;</span><br><span class="line">  <span class="attr">filterRate</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="attr">handleRating</span>: <span class="function">(<span class="params">rate: <span class="built_in">number</span></span>) =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Filter</span>(<span class="params">props: IFilterProps</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; filterRate, handleRating &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex flex-col justify-center items-center mb-4&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">span</span> <span class="attr">className</span>=<span class="string">&quot;font-semibold&quot;</span>&gt;</span>Minimum Rating <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Rating</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">initialValue</span>=<span class="string">&#123;filterRate&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">SVGclassName</span>=<span class="string">&quot;inline-block&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;handleRating&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>按星级过滤，有一个filterRate的<code>state</code>，一个设置filterRate值的方法<code>handleRating</code>，这些可以封装为1个自定义的<code>useFilterRate</code>中。上面的组件加上这个hook就拆分出了第三个功能–星级评价。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">useRateFilter</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [filterRate, setFilterRate] = <span class="title function_">useState</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleRating</span> = (<span class="params">rate: <span class="built_in">number</span></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setFilterRate</span>(rate);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123; filterRate, handleRating &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>按星级筛选商品仅需要一个方法</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">filterProducts</span>(<span class="params">products: <span class="built_in">any</span>[], rate: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> products.<span class="title function_">filter</span>(</span><br><span class="line">    <span class="function">(<span class="params">product: <span class="built_in">any</span></span>) =&gt;</span> product.<span class="property">rating</span>.<span class="property">rate</span> &gt; rate</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将所有代码组合起来</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;axios&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useEffect, useMemo, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Product</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./product&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Rating</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react-simple-star-rating&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Filter</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./filter&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useProducts &#125; <span class="keyword">from</span> <span class="string">&quot;./hooks/useProducts&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useRateFilter &#125; <span class="keyword">from</span> <span class="string">&quot;./hooks/useRateFilter&quot;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">filterProducts</span>(<span class="params">products: <span class="built_in">any</span>[], rate: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> products.<span class="title function_">filter</span>(</span><br><span class="line">    <span class="function">(<span class="params">product: <span class="built_in">any</span></span>) =&gt;</span> product.<span class="property">rating</span>.<span class="property">rate</span> &gt; rate</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Good</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; products &#125; = <span class="title function_">useProducts</span>();</span><br><span class="line">  <span class="keyword">const</span> &#123; filterRate, handleRating &#125; = <span class="title function_">useRateFilter</span>();</span><br><span class="line">  <span class="keyword">const</span> filteredProducts = <span class="title function_">useMemo</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="title function_">filterProducts</span>(products, filterRate),</span><br><span class="line">    [products, filterRate]</span><br><span class="line">  );</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex flex-col h-full&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Filter</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">filterRate</span>=<span class="string">&#123;filterRate</span> <span class="attr">as</span> <span class="attr">number</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">handleRating</span>=<span class="string">&#123;handleRating&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;h-full flex flex-wrap justify-center&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;filterProducts(products, filterRate).map((product: any) =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Product</span> <span class="attr">product</span>=<span class="string">&#123;product&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="开闭原则"><a href="#开闭原则" class="headerlink" title="开闭原则"></a>开闭原则</h2><p>这四个字组合起来，让人看上去一脸懵，基本意思是<em>类&#x2F;组件允许被扩展，不能被修改</em>，即开放扩展，关闭修改。</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">HiOutlineArrowNarrowRight</span>,</span><br><span class="line">  <span class="title class_">HiOutlineArrowNarrowLeft</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&quot;react-icons/hi&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">IButtonProps</span></span><br><span class="line">  <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="title class_">ButtonHTMLAttributes</span>&lt;<span class="title class_">HTMLButtonElement</span>&gt; &#123;</span><br><span class="line">  <span class="attr">text</span>: <span class="built_in">string</span>;</span><br><span class="line">  role?: <span class="string">&quot;back&quot;</span> | <span class="string">&quot;forward&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Button</span>(<span class="params">props: IButtonProps</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; text, role, icon &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&quot;flex items-center font-bold outline-none pt-4 pb-4 pl-8 pr-8 rounded-xl bg-gray-200 text-black&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...props</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;text&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;m-2&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;role === &quot;forward&quot; &amp;&amp; <span class="tag">&lt;<span class="name">HiOutlineArrowNarrowRight</span> /&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">        &#123;role === &quot;back&quot; &amp;&amp; <span class="tag">&lt;<span class="name">HiOutlineArrowNarrowLeft</span> /&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个按钮只实现乐前进样式和返回样式，如果要再加一个搜索样式，那就需要在<code>Button</code>组件的源码中修改，这不符合开闭原则。</p>
+<p>修改后</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">HiOutlineArrowNarrowRight</span>,</span><br><span class="line">  <span class="title class_">HiOutlineArrowNarrowLeft</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&quot;react-icons/hi&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">IButtonProps</span></span><br><span class="line">  <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="title class_">ButtonHTMLAttributes</span>&lt;<span class="title class_">HTMLButtonElement</span>&gt; &#123;</span><br><span class="line">  <span class="attr">text</span>: <span class="built_in">string</span>;</span><br><span class="line">  icon?: <span class="title class_">React</span>.<span class="property">ReactNode</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Button</span>(<span class="params">props: IButtonProps</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; text, role, icon &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&quot;flex items-center font-bold outline-none pt-4 pb-4 pl-8 pr-8 rounded-xl bg-gray-200 text-black&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#123;<span class="attr">...props</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;text&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;m-2&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;icon&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个按钮支持任何的icon，而不仅仅是<code>back</code>和<code>forward</code></p>
+<h2 id="里氏替换"><a href="#里氏替换" class="headerlink" title="里氏替换"></a>里氏替换</h2><p>意思就是，你的组件如果扩展了原生组件，那就要继承原生组件的api，比如你封装了一个input输入框，原生input有好多属性，那就应该继承，而且不要改名。</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cx <span class="keyword">from</span> <span class="string">&quot;clsx&quot;</span>;</span><br><span class="line"><span class="comment">// 继承了原生input的所有属性</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">ISearchInputProps</span></span><br><span class="line">  <span class="keyword">extends</span> <span class="title class_">React</span>.<span class="title class_">InputHTMLAttributes</span>&lt;<span class="title class_">HTMLInputElement</span>&gt; &#123;</span><br><span class="line">  isLarge?: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">SearchInput</span>(<span class="params">props: ISearchInputProps</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; value, onChange, isLarge, ...restProps &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex w-10/12&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;relative w-full&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">svg</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">aria-hidden</span>=<span class="string">&quot;true&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">className</span>=<span class="string">&quot;w-5 h-5 text-gray-500 dark:text-gray-400&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">fill</span>=<span class="string">&quot;none&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">stroke</span>=<span class="string">&quot;currentColor&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">viewBox</span>=<span class="string">&quot;0 0 24 24&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">path</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">strokeLinecap</span>=<span class="string">&quot;round&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">strokeLinejoin</span>=<span class="string">&quot;round&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">strokeWidth</span>=<span class="string">&quot;2&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">d</span>=<span class="string">&quot;M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            &gt;</span><span class="tag">&lt;/<span class="name">path</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">type</span>=<span class="string">&quot;search&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">id</span>=<span class="string">&quot;default-search&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">className</span>=<span class="string">&#123;cx(</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            &quot;<span class="attr">block</span> <span class="attr">p-4</span> <span class="attr">pl-10</span> <span class="attr">w-full</span> <span class="attr">text-sm</span> <span class="attr">text-gray-900</span> <span class="attr">bg-gray-50</span> <span class="attr">rounded-lg</span> <span class="attr">border</span> <span class="attr">border-gray-300</span> <span class="attr">focus:ring-blue-500</span> <span class="attr">focus:border-blue-500</span> <span class="attr">dark:bg-gray-700</span> <span class="attr">dark:border-gray-600</span> <span class="attr">dark:placeholder-gray-400</span> <span class="attr">dark:text-white</span> <span class="attr">dark:focus:ring-blue-500</span> <span class="attr">dark:focus:border-blue-500</span> <span class="attr">outline-none</span>&quot;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">isLarge</span> &amp;&amp; &quot;<span class="attr">text-3xl</span>&quot;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          )&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">placeholder</span>=<span class="string">&quot;Search for the right one...&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">required</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">value</span>=<span class="string">&#123;value&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onChange</span>=<span class="string">&#123;onChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &#123;<span class="attr">...restProps</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="接口分离"><a href="#接口分离" class="headerlink" title="接口分离"></a>接口分离</h2><p>意思是你的组件中不要定义无意义、无用处的属性，包括嵌套的属性</p>
+<h3 id="反面案例-1"><a href="#反面案例-1" class="headerlink" title="反面案例"></a>反面案例</h3><figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">IProduct</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./product&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">IThumbnailProps</span> &#123;</span><br><span class="line">  <span class="attr">product</span>: <span class="title class_">IProduct</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Thumbnail</span>(<span class="params">props: IThumbnailProps</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; product &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">img</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&quot;p-8 rounded-t-lg h-48&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">src</span>=<span class="string">&#123;product.imageUrl&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">alt</span>=<span class="string">&quot;product image&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    /&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>product中有很多属性，但是只用到了<code>imageUrl</code>一个，别人用的时候会很奇怪，我要展示一个缩略图，为什么要传一个商品进去。</p>
+<p>修改后</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">IProduct</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./product&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">IThumbnailProps</span> &#123;</span><br><span class="line">  <span class="attr">imageUrl</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">Thumbnail</span>(<span class="params">props: IThumbnailProps</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; imageUrl &#125; = props;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">img</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">className</span>=<span class="string">&quot;p-8 rounded-t-lg h-48&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">src</span>=<span class="string">&#123;imageUrl&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">alt</span>=<span class="string">&quot;product image&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    /&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="依赖倒转"><a href="#依赖倒转" class="headerlink" title="依赖倒转"></a>依赖倒转</h2><p>意思就是，你的组件中如果有某些需要主动触发的操作，应该暴露处一个接口。<br>react基本都是这样得，这个大部分人都会做，比如<code>Button</code>的<code>onClick</code>，<code>Form</code>的<code>onSubmit</code>等</p>
+<p>文章代码来自<a target="_blank" rel="noopener" href="https://github.com/ipenywis/react-solid/tree/main/src/principles">github</a></p>
+
+        </article>
+        <div class="post-tools" id="post-tools">
+            <div class="post-tools-left">
+                
+                <div class="share-link mobile">
+    <div class="share-qrcode">
+        <div class="share-button" title="使用手机访问这篇文章">
+            <i class="fas fa-qrcode"></i>
+        </div>
+        <div class="share-main">
+            <div class="share-main-all">
+                <div id="qrcode" title="https://www.ryanamigo.com/2023/07/16/react-solid-principle/">
+                </div>
+                <div class="reward-dec">使用手机访问这篇文章</div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            new QRCode(document.getElementById("qrcode"), "https://www.ryanamigo.com/2023/07/16/react-solid-principle/");
+        </script>
+    </div>
+</div>
+                <div class="share-link weibo"><a class="share-button" target="_blank"
+    href="https://service.weibo.com/share/share.php?title=react组件的S.O.L.I.D原则&amp;url=https://www.ryanamigo.com/2023/07/16/react-solid-principle/&amp;pic=https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/solid.png"
+    title="分享到微博" rel="noopener external nofollow noreferrer noopener">
+    <i class="fab fa-weibo" style="font-size:22px"></i>
+</a>
+</div>
+<div class="share-link copyurl">
+<div class="share-button" id="post-share-url" title="复制链接" onclick="acrylic.copyPageUrl()">
+    <i class="fas fa-link"></i>
+</div>
+</div>
+            </div>
+            <div class="post-tools-right">
+                <div class="tag_share">
+                    <div class="post-meta__tag-list">
+                        
+                            <a href="/tags/react/" class="post-meta__tags">
+                                <span class="tags-punctuation">#</span>
+                                react
+                                <span class="tagsPageCount">1</span>
+                            </a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="post-copyright">
+    <div class="post-copyright__author">
+        <a class="post-copyright__original" title="该文章为原创文章，注意版权协议">原创</a>
+        <a class="post-copyright-title" href="#">
+            <span>react组件的S.O.L.I.D原则</span>
+        </a>
+    </div>
+    <div class="post-copyright__type">
+        <span class="post-copyright-info" id="post-copyright-url">
+            <a href="/2023/07/16/react-solid-principle/">https://www.ryanamigo.com/2023/07/16/react-solid-principle/</a>
+        </span>
+        <button class="post-copyright-copybtn" onclick="acrylic.copyPageUrl()">
+            <i class="fas fa-paste copy-btn"></i>
+        </button>
+    </div>
+    <div class="post-copyright__notice"><span class="post-copyright-info">本文是原创文章，采用 <a
+                href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a> 协议，完整转载请注明来自 <a
+                href="/">Ryan&#39;s Blog</a>
+            </span>
+        </div>
+</div>
+        <nav class="pagination-post" id="pagination">
+    
+        
+            <div class="next-post pull-full">
+                <a href="/2023/07/06/dst-server/">
+                    <div class="pagination-info">
+                        <div class="label">下一篇</div>
+                        <div class="next_info">使用docker开饥荒联机版服务器</div>
+                    </div>
+                </a>
+            </div>
+                
+        
+    
+</nav>
+            
+    </div>
+    <div class="aside-content" id="aside-content">
+    
+    
+        
+        <div class="card-widget card-info">
+    <div class="card-content">
+        <div class="card-info-avatar is-center">
+            <div class="author-info__sayhi" id="author-info__sayhi">
+            </div>
+            <div class="author-info__name">
+                Ryan
+            </div>
+            <div class="author-info__description">这世界有太多不如意，但你的生活还是要继续。太阳每天依旧要升起，希望永远种在你心里。</div>
+        </div>
+    </div>
+    <div class="banner-button-group">
+        <a class="banner-button" href="/">
+            <i class="fas fa-circle-chevron-right"></i>
+            <span class="banner-button-text">个人主页</span>
+        </a>
+    </div>
+    <div class="card-info-social-icons is-center">
+        
+            <a class="social-icon" href="mailto:yuyan9@111.com" title="Mail">
+                <i class="fa-solid fa-envelope"></i>
+            </a>
+        
+    </div>
+</div>
+     
+    
+    <div class="sticky_layout">
+        
+            <div class="card-widget" id="card-toc">
+    <div class="item-headline">
+        <i class="fas fa-bars"></i>
+        <span>文章目录</span>
+    </div>
+    <div class="toc-content" id="toc-content">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3"><span class="toc-text">单一职责</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E9%9D%A2%E6%A1%88%E4%BE%8B"><span class="toc-text">反面案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E6%8B%86%E5%88%86"><span class="toc-text">组件拆分</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99"><span class="toc-text">开闭原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8C%E6%B0%8F%E6%9B%BF%E6%8D%A2"><span class="toc-text">里氏替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%88%86%E7%A6%BB"><span class="toc-text">接口分离</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E9%9D%A2%E6%A1%88%E4%BE%8B-1"><span class="toc-text">反面案例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E5%80%92%E8%BD%AC"><span class="toc-text">依赖倒转</span></a></li></ol>
+    </div>
+</div>
+            
+        
+            
+        <div class="card-widget card-recent-post">
+    <div class="item-headline">
+        <i class="fas fa-list-ol"></i>
+        <span>最近发布</span>
+    </div>
+    <div class="aside-list">
+        
+        
+            <div class="aside-list-item">
+                <a class="thumbnail" href="/2023/07/16/react-solid-principle/" title="react组件的S.O.L.I.D原则">
+                    <img
+                        alt="react组件的S.O.L.I.D原则"
+                        src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/solid.png">
+                </a>
+                <div class="content">
+                    
+                        <a class="article-recent_post_categories" href="/2023/07/16/react-solid-principle/">
+                            前端
+                        </a>
+                    
+                    <a class="title" href="/2023/07/16/react-solid-principle/" title="react组件的S.O.L.I.D原则">
+                        react组件的S.O.L.I.D原则
+                    </a>
+                </div>
+            </div>
+                
+        
+            <div class="aside-list-item">
+                <a class="thumbnail" href="/2023/07/06/dst-server/" title="使用docker开饥荒联机版服务器">
+                    <img
+                        alt="使用docker开饥荒联机版服务器"
+                        src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/dst-cover.jpg">
+                </a>
+                <div class="content">
+                    
+                        <a class="article-recent_post_categories" href="/2023/07/06/dst-server/">
+                            游戏
+                        </a>
+                    
+                    <a class="title" href="/2023/07/06/dst-server/" title="使用docker开饥荒联机版服务器">
+                        使用docker开饥荒联机版服务器
+                    </a>
+                </div>
+            </div>
+                
+        
+    </div>
+</div>
+     
+        
+    </div>
+</div> 
+</main>
+                <footer id="footer">
+                    <div id="footer_deal">
+    
+    <img class="footer_mini_logo" src="/img/avatar.jpeg"
+        title="返回顶部" onclick="acrylic.toTop()">
+    
+</div>    
+<div id="heo-footer">
+    
+        <div class="footer-group">
+            <h3 class="footer-title">导航</h3>
+            <div class="footer-links">
+                
+                    <a class="footer-item" href="/archives/" title="文章归档" rel="noopener external nofollow noreferrer">文章归档</a>
+                
+                    <a class="footer-item" href="/categories/" title="文章分类" rel="noopener external nofollow noreferrer">文章分类</a>
+                
+                    <a class="footer-item" href="/tags/" title="文章标签" rel="noopener external nofollow noreferrer">文章标签</a>
+                    
+            </div>
+        </div>
+    
+        <div class="footer-group">
+            <h3 class="footer-title">Acrylic</h3>
+            <div class="footer-links">
+                
+                    <a class="footer-item" target="_blank" href="https://acrylic.zhheo.com/" title="主题官网" rel="noopener external nofollow noreferrer noopener">主题官网</a>
+                
+                    <a class="footer-item" target="_blank" href="https://github.com/hexo-theme-Acrylic/Hexo-Theme-Acrylic" title="Github" rel="noopener external nofollow noreferrer noopener">Github</a>
+                    
+            </div>
+        </div>
+    
+    
+</div>
+<div id="footer-section">
+    <div class="footer-section-links">
+        <div class="footer-section-left">
+            <div id="footer-section-tips">
+                <div class="copyright">©2023 - 2023 By 
+                    <a class="footer-section-link" href="/" rel="external nofollow">Ryan</a>
+                    <a class="footer-section-link" href="https://github.com/hexo-theme-Acrylic/Hexo-Theme-Acrylic-Next" rel="external nofollow" target="_blank"> Theme By Acrylic-Next</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-section-right">
+            <a class="footer-section-link" href="/rss/">订阅</a>
+            
+            <a class="footer-section-link cc" target="_blank" href="https://creativecommons.org/licenses/by/4.0/" title="cc协议">
+                <i class="fa-solid fa-closed-captioning"></i>
+            </a>
+        </div>
+    </div>
+</div>
+                </footer>
+            </div>
+         
+        <div>
+    <script type="text/javascript" src="/js/utils.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+    
+
+<script src="/lib/pjax.min.js"></script>
+
+
+
+<script src="/lib/snackbar.min.js"></script>
+
+
+    
+<script src="/lib/view-image.min.js"></script>
+
+
+
+<div id="js-pjax">
+    
+     
+</div>
+
+
+    
+<script src="/js/extend/covercolor/web.js"></script>
+
+        
+
+
+    <script>
+  let pjaxSelectors = [
+    'title',
+    '#body-wrap',
+    '#site-config',
+    'meta[name="description"]',
+    '#js-pjax'
+  ]
+  
+  const pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+  })
+
+  document.addEventListener('pjax:error', (e) => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+</script>
+    
+</div>
+        
+     
+        <div class="needEndHide" id="nav-music" onclick="acrylic.musicToggle()">
+    <div id="nav-music-hoverTips">音乐已暂停</div>
+    <meting-js id="1708664797" server="tencent" type="playlist" mutex="true"
+        preload="none" data-lrctype="0" order="random" theme="var(--heo-main)"></meting-js>
+</div>
+    
+    </body>
+</html>
+<script>const posts=["2023/07/16/react-solid-principle/","2023/07/06/dst-server/"];function toRandomPost(){ window.pjax ? pjax.loadUrl('/'+posts[Math.floor(Math.random()*posts.length)]) : window.open('/'+posts[Math.floor(Math.random()*posts.length)], "_self"); };</script>

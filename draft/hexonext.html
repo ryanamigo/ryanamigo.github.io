@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使用hexo做为数据源，配合Next做渲染 | Ryan&#39;s Blog</title>
+<noscript>开启Javascript是必要的</noscript>
+<link rel="icon" type="image/x-icon" href="/img/avatar.jpeg">
+<link rel="apple-touch-icon" href="/img/avatar.jpeg">
+<meta name="apple-mobile-web-app-title" content="Ryan&#39;s Blog">
+<link rel="bookmark" href="/img/avatar.jpeg">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="/img/avatar.jpeg">
+<meta name="description" content="使用hexo做为数据源，配合Next做渲染">
+<meta name="theme-color" content="#1C1C1F">
+<link rel="stylesheet" href="/css/var.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    
+
+<link rel="stylesheet" href="/lib/snackbar.min.css">
+
+
+<script src="/lib/qrcode.min.js"></script>
+
+
+
+
+
+<script>var GLOBALCONFIG = {"root":"/","runtime":"2023-07-01 00:00:00","lazyload":{"enable":false,"error":"/img/acrylic.png"},"hightlight":{"enable":false,"limit":200},"lightbox":true,"randomlinks":false,"lang":{"theme":{"dark":"已切换至深色模式","light":"已切换至浅色模式"},"copy":{"success":"复制成功","error":"复制失败"},"backtop":"返回顶部","time":{"recent":"最近","yesterday":"昨天","berforeyesterday":"前天","daybefore":"天前","runtime":"天"},"sayhello":{"morning":"早上好","noon":"中午好","afternoon":"下午好","night":"晚上好","goodnight":"晚安","iam":"!  我是"},"search":{"empty":"搜索结果为空","hit":"已为您找到 ${query} 条结果","placeholder":"输入关键词快速查找"}},"covercolor":false,"comment":{"enable":false,"twikooUrl":null}};</script><script id="site-config">var PAGECONFIG = {"is_home":false,"is_post":false,"is_page":true,"page":"default","toc":false,"comment":false};</script>
+    <meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Ryan's Blog" type="application/atom+xml">
+</head>
+    <body id="body">
+        
+        <div id="console" style="zoom: 1;" class="">
+    <div class="close-btn" onclick="acrylic.hideConsole()" href="javascript:void(0);">
+        <i class="fas fa-circle-xmark"></i>
+    </div>
+    
+        <div class="console-card-group">
+            <div class="console-card-group-left">
+                <div class="console-card" id="card-newest-comments" onclick="acrylic.hideConsole()">
+                    <div class="card-content">
+                        <div class="author-content-item-tips">互动</div>
+                        <div class="author-content-item-title">最新评论</div>
+                    </div>
+                    <div class="aside-list"></div>
+                </div>
+    
+            </div>
+            <div class="console-card-group-right">
+                <div class="console-card tags" onclick="acrylic.hideConsole()">
+                    <div class="card-content">
+                        <div class="author-content-item-tips">标签</div>
+                        <div class="author-content-item-title">寻找感兴趣的领域</div>
+                    </div>
+                    <div class="card-tag-cloud">
+                        
+                            <a href="/tags/%E9%A5%A5%E8%8D%92/" style="font-size: 0.8rem; color: #d3d3d3">饥荒<sup>1</sup></a>
+                        
+                            <a href="/tags/react/" style="font-size: 0.8rem; color: #d3d3d3">react<sup>1</sup></a>
+                        
+                    </div>
+                </div>
+                <div class="console-card history" onclick="acrylic.hideConsole()">
+                    <ul class="card-archive-list">
+    
+     
+        <li class="card-archive-list-item"><a class="card-archive-list-link" onclick="pjax.loadUrl('/archives/2023-07/')" data-pjax-state=""><span
+            class="card-archive-list-date">2023-07</span>
+            <div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span
+                    class="card-archive-list-count-unit">篇</span></div>
+            </a>
+        </li>
+        
+</ul>
+
+                </div>
+            </div>
+        </div>
+    
+    
+    <div class="button-group">
+        <div class="console-btn-item"> <a class="darkmode_switchbutton" onclick="acrylic.switchDarkMode()" title="显示模式切换"
+                href="javascript:void(0);" rel="external nofollow" data-pjax-state=""><i class="fas fa-moon"
+                    style="font-size: 1rem;"></i></a></div>
+        
+    </div>
+    <div class="console-mask" onclick="acrylic.hideConsole()" href="javascript:void(0);" rel="external nofollow"></div>
+</div>
+        <div id="sidebar" style="zoom: 1;">
+    <div id="menu-mask" style="display: none;"></div>
+    <div id="sidebar-menus" class>
+        <span class="sidebar-menu-item-title">功能</span>
+        <div class="sidebar-menu-item">
+            <a class="darkmode_switchbutton menu-child" onclick="acrylic.switchDarkMode()" title="显示模式切换"
+                href="javascript:void(0);" rel="external nofollow">
+                <i class="fas fa-moon" style="font-size: 1rem;"></i>
+                <span>显示模式</span>
+            </a>
+        </div>
+        
+            <div class="back-menu-list-groups">
+    
+      
+      <div class="back-menu-list-group">
+        <div class="back-menu-list-title">
+          我的
+        </div>
+        <div class="back-menu-list">
+          
+            
+            <a class="back-menu-item" href="/" rel="external nofollow" title="博客">
+              <img class="back-menu-item-icon" src="/img/avatar.jpeg" loading="lazy">
+              <span class="back-menu-item-text">
+                博客
+              </span>
+            </a>
+          
+        </div>
+      </div>
+    
+  </div>
+  
+        
+        <div class="menus_items">
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 文库</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" href="/archives/">
+                                <i class="fas fa-box-archive"></i>
+                                <span> 文章列表</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/categories/">
+                                <i class="fas fa-cube"></i>
+                                <span> 全部分类</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/tags/">
+                                <i class="fas fa-tags"></i>
+                                <span> 全部标签</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 更多站点</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" target="_blank" rel="noopener" href="https://xhyx.ryanamigo.com">
+                                <i class="fas fa-keyboard"></i>
+                                <span> 在线小鹤音形练习</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+</div>
+        <span class="sidebar-menu-item-title">标签</span>
+        <div class="card-widget card-tags card-archives card-webinfo card-allinfo">
+            <div class="item-headline">
+                <i class="fas fa-tags"></i>
+                <span>标签</span>
+            </div>
+            <div class="card-tag-cloud">
+                
+                    <a href="/tags/%E9%A5%A5%E8%8D%92/" style="font-size: 1em; color: #d3d3d3">饥荒
+                        <sup>1</sup>
+                    </a>
+                
+                    <a href="/tags/react/" style="font-size: 1em; color: #d3d3d3">react
+                        <sup>1</sup>
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+</div>    
+        
+            <div class="page" id="body-wrap">
+                <header class="not-top-img" id="page-header">
+    <nav id="nav" class="show">
+    <div id="nav-group">
+        <div id="blog_name">
+            
+                <div class="back-home-button" tabindex="-1">
+                    <i class="back-home-button-icon fas fa-grip-vertical"></i>
+                    <div class="back-menu-list-groups">
+    
+      
+      <div class="back-menu-list-group">
+        <div class="back-menu-list-title">
+          我的
+        </div>
+        <div class="back-menu-list">
+          
+            
+            <a class="back-menu-item" href="/" rel="external nofollow" title="博客">
+              <img class="back-menu-item-icon" src="/img/avatar.jpeg" loading="lazy">
+              <span class="back-menu-item-text">
+                博客
+              </span>
+            </a>
+          
+        </div>
+      </div>
+    
+  </div>
+  
+                </div>
+            
+            <a id="site-name" href="/" title="返回博客主页">
+                    
+            </a>
+        </div>
+        <div id="page-name-mask">
+            <div id="page-name">
+                <a id="page-name-text" onclick="acrylic.toTop()">使用hexo做为数据源，配合Next做渲染</a>
+            </div>
+        </div>
+        <div id="menus">
+            <div class="menus_items">
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 文库</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" href="/archives/">
+                                <i class="fas fa-box-archive"></i>
+                                <span> 文章列表</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/categories/">
+                                <i class="fas fa-cube"></i>
+                                <span> 全部分类</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/tags/">
+                                <i class="fas fa-tags"></i>
+                                <span> 全部标签</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 更多站点</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" target="_blank" rel="noopener" href="https://xhyx.ryanamigo.com">
+                                <i class="fas fa-keyboard"></i>
+                                <span> 在线小鹤音形练习</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+</div>
+        </div>
+        <!-- <div id="nav-left">
+            <div id="fps-group">
+                <div id="fps">145</div><span class="fpsText">FPS</span>
+            </div>
+        </div> -->
+        <div id="nav-right">
+            
+
+    <div class="nav-button" id="randomPost_button">
+        <a class="site-page" onclick="toRandomPost()"
+            title="随机前往一个文章">
+            <i class="fas fa-shuffle" style="font-size: 1rem;"></i>
+        </a>
+    </div>
+
+
+
+    <div class="nav-button" id="nav-console">
+        <a class="console_switchbutton" onclick="acrylic.showConsole()"
+        title="显示中控台" href="javascript:void(0);" rel="external nofollow">
+        <i class="fas fa-bars-progress" style="font-size: 1rem;"></i>
+        </a>
+    </div>
+
+<div class="nav-button" id="nav-totop" onclick="acrylic.toTop()">
+    <a class="totopbtn">
+        <i class="fas fa-arrow-up"></i>
+        <span id="percent">0</span>
+    </a>
+</div>
+<div id="toggle-menu">
+    <a class="site-page">
+        <i class="fas fa-bars fa-fw" style="font-size: 1rem;"></i>
+    </a>
+</div>
+        </div>
+    </div>
+</nav>
+        
+</header>
+                <main class="layout hide-aside" id="content-inner">
+    <div id="page">
+        
+                <div id="article-container">
+    <p>hexo使用<code>warehouse数据库</code>，也就是一个json文件，运行在node环境。而<code>next.js</code>也运行在node服务端，因此可以让<code>next.js</code>在服务端执行hexo的api，获取数据，再生成html返回给前端网页。</p>
+<span id="more"></span>
+
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npx create-next-app<span class="meta">@latest</span></span><br><span class="line">hexo init hexo-temp</span><br></pre></td></tr></table></figure>
+<p>分别创建hexo和next两个项目，创建的两个项目文件结构如下</p>
+<p><img src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/hexo-next-project.jpg"></p>
+<h2 id="整合项目"><a href="#整合项目" class="headerlink" title="整合项目"></a>整合项目</h2><p>把<code>hexo</code>项目的文件夹和<code>package.json</code>中的依赖转移到<code>next</code>项目中，整合后如下<br><img src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/hexo-next-project2.jpg"></p>
+<p>再修改一些配置</p>
+<p><code>public</code>目录已经被<code>next</code>使用，所以需要更改一下hexo得输出文件夹,因此把<code>_config.yml</code>中的<code>public_dir: public</code>更改为<code>public_dir: hexo-dist</code></p>
+<p>修改<code>package.json</code>中的启动脚本</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;scripts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;clean&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hexo clean&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hexo server&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;new&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hexo new&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hexo generate &amp;&amp; next dev&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hexo generate &amp;&amp; next build&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;start&quot;</span><span class="punctuation">:</span> <span class="string">&quot;next start&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="生成hexo实例"><a href="#生成hexo实例" class="headerlink" title="生成hexo实例"></a>生成hexo实例</h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Hexo</span> <span class="keyword">from</span> <span class="string">&#x27;hexo&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; join &#125; <span class="keyword">from</span> <span class="string">&#x27;path&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">&#x27;fs&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">type</span> <span class="title class_">Database</span> <span class="keyword">from</span> <span class="string">&#x27;warehouse&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">MyHexo</span> = <span class="title class_">Hexo</span> &amp; &#123;</span><br><span class="line">  <span class="attr">database</span>: <span class="title class_">Database</span>;</span><br><span class="line">  <span class="attr">_dbLoaded</span>: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">__SECRET_HEXO_INSTANCE__</span>: <span class="title class_">MyHexo</span> | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">initHexo</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="comment">// 只保留一个 Hexo 实例</span></span><br><span class="line">  <span class="keyword">if</span> (__SECRET_HEXO_INSTANCE__) &#123;</span><br><span class="line">    <span class="keyword">return</span> __SECRET_HEXO_INSTANCE__;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> hexo = <span class="keyword">new</span> <span class="title class_">Hexo</span>(process.<span class="title function_">cwd</span>(), &#123;</span><br><span class="line">    <span class="attr">silent</span>: <span class="literal">true</span>,</span><br><span class="line">  &#125;) <span class="keyword">as</span> <span class="title class_">MyHexo</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> dbPath = <span class="title function_">join</span>(hexo.<span class="property">base_dir</span>, <span class="string">&#x27;db.json&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (process.<span class="property">env</span>.<span class="property">NODE_ENV</span> !== <span class="string">&#x27;production&#x27;</span>) &#123;</span><br><span class="line">    <span class="comment">// 当 不属于生产构建、且本地存在 db.json 时，删除 db.json、确保开发时可以预览实时最新的数据</span></span><br><span class="line">    <span class="keyword">if</span> (fs.<span class="title function_">existsSync</span>(dbPath)) &#123;</span><br><span class="line">      <span class="keyword">await</span> fs.<span class="property">promises</span>.<span class="title function_">unlink</span>(dbPath);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">await</span> hexo.<span class="title function_">init</span>();</span><br><span class="line">  <span class="keyword">await</span> hexo.<span class="title function_">load</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (hexo.<span class="property">env</span>.<span class="property">init</span> &amp;&amp; hexo.<span class="property">_dbLoaded</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!fs.<span class="title function_">existsSync</span>(dbPath)) &#123;</span><br><span class="line">      <span class="comment">// 只有在本地不存在 db.json、且在生产构建时，将数据库写入文件系统</span></span><br><span class="line">      <span class="keyword">if</span> (process.<span class="property">env</span>.<span class="property">NODE_ENV</span> === <span class="string">&#x27;production&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">await</span> hexo.<span class="property">database</span>.<span class="title function_">save</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  __SECRET_HEXO_INSTANCE__ = hexo;</span><br><span class="line">  <span class="keyword">return</span> hexo;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>这些代码需要在服务端执行，因此需要放在<code>next</code>提供的<code>getServerSideProps中执行</code></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">getServerSideProps</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> hexo = <span class="keyword">await</span> <span class="title function_">initHexo</span>();</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(hexo);</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">      <span class="attr">a</span>: <span class="string">&#x27;1&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后可以在控制台看到</p>
+<p><img src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/hexo-next-project3.jpg"></p>
+<h2 id="查找文章"><a href="#查找文章" class="headerlink" title="查找文章"></a>查找文章</h2><p><a target="_blank" rel="noopener" href="https://hexojs.github.io/warehouse/index.html">warehouse数据库文档</a>，<br><code>hexo</code>内置<code>warehouse</code>对象，<code>hexo.database</code>，在这里放两个例子,后面就请读者自行研究了</p>
+<ol>
+<li>分页获取文章</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 根据hexo文章原始对象获取文章简要信息json</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> postItem </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns</span> </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">getPlainHexoPost</span> = (<span class="params">postItem: <span class="built_in">any</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="comment">// content是html字符串，raw是markdown字符串</span></span><br><span class="line">  <span class="keyword">const</span> &#123; title, date, slug, tags, categories, cover = <span class="string">&#x27;&#x27;</span>, updated, _id, excerpt &#125; = postItem</span><br><span class="line">  <span class="keyword">const</span> dateStr = date.<span class="title function_">format</span>(<span class="string">&#x27;YYYY-MM-DD&#x27;</span>)</span><br><span class="line">  <span class="keyword">const</span> updateStr = updated.<span class="title function_">format</span>(<span class="string">&#x27;YYYY-MM-DD&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> tagsArr = <span class="title function_">parseHexoArr</span>(tags);</span><br><span class="line">  <span class="keyword">const</span> category = <span class="title function_">parseHexoArr</span>(categories)?.[<span class="number">0</span>] || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    title,</span><br><span class="line">    <span class="attr">date</span>: dateStr,</span><br><span class="line">    <span class="attr">update</span>: updateStr,</span><br><span class="line">    slug,</span><br><span class="line">    <span class="attr">tags</span>: tagsArr,</span><br><span class="line">    <span class="attr">id</span>: _id,</span><br><span class="line">    excerpt,</span><br><span class="line">    cover,</span><br><span class="line">    category</span><br><span class="line">  &#125; <span class="keyword">as</span> <span class="title class_">HexoPost</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 获取分页的文章列表</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> page </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> pageSize </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">getHexoPostsPagination</span> = <span class="keyword">async</span> (<span class="params">&#123; page, pageSize&#125;: &#123;page: <span class="built_in">number</span>, pageSize: <span class="built_in">number</span>&#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> hexo = <span class="keyword">await</span> <span class="title function_">initHexo</span>();</span><br><span class="line">  <span class="keyword">const</span> posts = hexo.<span class="property">database</span>.<span class="title function_">model</span>(<span class="string">&#x27;Post&#x27;</span>).<span class="title function_">find</span>(&#123;&#125;, &#123;</span><br><span class="line">    <span class="attr">limit</span>: pageSize,</span><br><span class="line">    <span class="attr">skip</span>: (page - <span class="number">1</span>) * pageSize,</span><br><span class="line">  &#125;).<span class="title function_">sort</span>(&#123;</span><br><span class="line">    <span class="attr">date</span>: -<span class="number">1</span></span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> totalElement = hexo.<span class="property">database</span>.<span class="title function_">model</span>(<span class="string">&#x27;Post&#x27;</span>).<span class="title function_">count</span>(); <span class="comment">// 文章总数</span></span><br><span class="line">  <span class="keyword">const</span> totalPage = <span class="title class_">Math</span>.<span class="title function_">ceil</span>(totalElement / pageSize); <span class="comment">// 总页数</span></span><br><span class="line">  <span class="keyword">const</span> plainPosts = posts.<span class="title function_">map</span>(<span class="function">(<span class="params">postItem: <span class="built_in">any</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">getPlainHexoPost</span>(postItem);</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    totalElement,</span><br><span class="line">    totalPage,</span><br><span class="line">    page,</span><br><span class="line">    pageSize,</span><br><span class="line">    <span class="attr">posts</span>: plainPosts</span><br><span class="line">  &#125; <span class="keyword">as</span> &#123;</span><br><span class="line">    <span class="attr">page</span>: <span class="built_in">number</span>,</span><br><span class="line">    <span class="attr">pageSize</span>: <span class="built_in">number</span>,</span><br><span class="line">    <span class="attr">totalElement</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">totalPage</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">posts</span>: <span class="title class_">HexoPost</span>[];</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<ol start="2">
+<li>获取某个标签下得文章</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 根据标签名获取对应的文章列表</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> tagName </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns</span> </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">getHexoPostByTagName</span> = <span class="keyword">async</span> (<span class="params">tagName: <span class="built_in">string</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> hexo = <span class="keyword">await</span> <span class="title function_">initHexo</span>();</span><br><span class="line">  <span class="keyword">const</span> tagList = hexo.<span class="property">database</span>.<span class="title function_">model</span>(<span class="string">&#x27;Tag&#x27;</span>).<span class="title function_">find</span>(&#123;</span><br><span class="line">    <span class="attr">name</span>: tagName</span><br><span class="line">  &#125;).<span class="title function_">toArray</span>();</span><br><span class="line">  <span class="keyword">const</span> postsFromTag = tagList?.[<span class="number">0</span>]?.<span class="property">posts</span>;</span><br><span class="line">  <span class="keyword">if</span> (!postsFromTag) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> posts = postsFromTag.<span class="title function_">map</span>(<span class="function">(<span class="params">postItem: <span class="built_in">any</span></span>) =&gt;</span> <span class="title function_">getPlainHexoPost</span>(postItem));</span><br><span class="line">  <span class="keyword">return</span> posts <span class="keyword">as</span> <span class="title class_">HexoPost</span>[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>本人在使用13.4.4版本时，使用App rouer，执行hexo api时会报错，因此换回了page router，如果今后的版本能够使用App router，建议使用</em></p>
+<p>有了hexo的数据，后面就是自己写样式了，交给屏幕前厉害的前端了。</p>
+
+</div>
+             
+            
+    </div>
+       
+</main>     
+
+                <footer id="footer">
+                    <div id="footer_deal">
+    
+    <img class="footer_mini_logo" src="/img/avatar.jpeg"
+        title="返回顶部" onclick="acrylic.toTop()">
+    
+</div>    
+<div id="heo-footer">
+    
+        <div class="footer-group">
+            <h3 class="footer-title">导航</h3>
+            <div class="footer-links">
+                
+                    <a class="footer-item" href="/archives/" title="文章归档" rel="noopener external nofollow noreferrer">文章归档</a>
+                
+                    <a class="footer-item" href="/categories/" title="文章分类" rel="noopener external nofollow noreferrer">文章分类</a>
+                
+                    <a class="footer-item" href="/tags/" title="文章标签" rel="noopener external nofollow noreferrer">文章标签</a>
+                    
+            </div>
+        </div>
+    
+        <div class="footer-group">
+            <h3 class="footer-title">Acrylic</h3>
+            <div class="footer-links">
+                
+                    <a class="footer-item" target="_blank" href="https://acrylic.zhheo.com/" title="主题官网" rel="noopener external nofollow noreferrer noopener">主题官网</a>
+                
+                    <a class="footer-item" target="_blank" href="https://github.com/hexo-theme-Acrylic/Hexo-Theme-Acrylic" title="Github" rel="noopener external nofollow noreferrer noopener">Github</a>
+                    
+            </div>
+        </div>
+    
+    
+</div>
+<div id="footer-section">
+    <div class="footer-section-links">
+        <div class="footer-section-left">
+            <div id="footer-section-tips">
+                <div class="copyright">©2023 - 2023 By 
+                    <a class="footer-section-link" href="/" rel="external nofollow">Ryan</a>
+                    <a class="footer-section-link" href="https://github.com/hexo-theme-Acrylic/Hexo-Theme-Acrylic-Next" rel="external nofollow" target="_blank"> Theme By Acrylic-Next</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-section-right">
+            <a class="footer-section-link" href="/rss/">订阅</a>
+            
+            <a class="footer-section-link cc" target="_blank" href="https://creativecommons.org/licenses/by/4.0/" title="cc协议">
+                <i class="fa-solid fa-closed-captioning"></i>
+            </a>
+        </div>
+    </div>
+</div>
+                </footer>
+            </div>
+         
+        <div>
+    <script type="text/javascript" src="/js/utils.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+    
+
+<script src="/lib/pjax.min.js"></script>
+
+
+
+<script src="/lib/snackbar.min.js"></script>
+
+
+    
+<script src="/lib/view-image.min.js"></script>
+
+
+
+<div id="js-pjax">
+    
+     
+</div>
+
+
+    
+<script src="/js/extend/covercolor/web.js"></script>
+
+        
+
+
+    <script>
+  let pjaxSelectors = [
+    'title',
+    '#body-wrap',
+    '#site-config',
+    'meta[name="description"]',
+    '#js-pjax'
+  ]
+  
+  const pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+  })
+
+  document.addEventListener('pjax:error', (e) => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+</script>
+    
+</div>
+        
+     
+        <div class="needEndHide" id="nav-music" onclick="acrylic.musicToggle()">
+    <div id="nav-music-hoverTips">音乐已暂停</div>
+    <meting-js id="1708664797" server="tencent" type="playlist" mutex="true"
+        preload="none" data-lrctype="0" order="random" theme="var(--heo-main)"></meting-js>
+</div>
+    
+    </body>
+</html>
+<script>const posts=["2023/07/16/react-solid-principle/","2023/07/06/dst-server/"];function toRandomPost(){ window.pjax ? pjax.loadUrl('/'+posts[Math.floor(Math.random()*posts.length)]) : window.open('/'+posts[Math.floor(Math.random()*posts.length)], "_self"); };</script>

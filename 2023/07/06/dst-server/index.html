@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使用docker开饥荒联机版服务器 | Ryan&#39;s Blog</title>
+<noscript>开启Javascript是必要的</noscript>
+<link rel="icon" type="image/x-icon" href="/img/avatar.jpeg">
+<link rel="apple-touch-icon" href="/img/avatar.jpeg">
+<meta name="apple-mobile-web-app-title" content="Ryan&#39;s Blog">
+<link rel="bookmark" href="/img/avatar.jpeg">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="/img/avatar.jpeg">
+<meta name="description" content="&lt;h2 id=&#34;选择镜像&#34;&gt;&lt;a href=&#34;#选择镜像&#34; class=&#34;headerlink&#34; title=&#34;选择镜像&#34;&gt;&lt;/a&gt;选择镜像&lt;/h2&gt;&lt;p&gt;目前持续更新，并且稳定的镜像是&lt;a href=&#34;https://hub.docker.com/r/jamesits/dst-server&#34;&gt;jamesits提供的镜像&lt;/a&gt;，详细文档可访问&lt;a href=&#34;https://github.com/Jamesits/docker-dst-server&#34;&gt;github&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;启动&#34;&gt;&lt;a href=&#34;#启动&#34; class=&#34;headerlink&#34; title=&#34;启动&#34;&gt;&lt;/a&gt;启动&lt;/h2&gt;&lt;h3 id=&#34;docker-run&#34;&gt;&lt;a href=&#34;#docker-run&#34; class=&#34;headerlink&#34; title=&#34;docker run&#34;&gt;&lt;/a&gt;docker run&lt;/h3&gt;&lt;p&gt;使用普通的docker-run命令&lt;/p&gt;
+&lt;figure class=&#34;highlight shell&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;docker run -v ./DoNotStarveTogether:/data -d -p 10999-11000:10999-11000/udp -p 12346-12347:12346-12347/udp -e &amp;quot;DST_SERVER_ARCH=amd64&amp;quot; -it jamesits/dst-server:latest&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-v&lt;/code&gt;的意思是将本机的当前目录下的&lt;code&gt;DoNotStarveTogether&lt;/code&gt;文件夹映射到docker容器中，这样把容器删除后也不会丢失数据&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-p&lt;/code&gt;的意思是将本机的10999 11000 12346 12347这4个udp端口映射到容器对应的端口&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-e&lt;/code&gt;的意思是设置容器启动的环境变量，即amd64架构&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;it&lt;/code&gt;的意思是以交互模式运行容器(i)，并为容器重新分配一个伪输入终端(t)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;建议把命令写在一个文件中，方便执行，例如&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;echo &amp;quot;docker run -v ./DoNotStarveTogether:/data -d -p 10999-11000:10999-11000/udp -p 12346-12347:12346-12347/udp -e &amp;quot;DST_SERVER_ARCH=amd64&amp;quot; -it jamesits/dst-server:latest&amp;quot; &amp;gt;&amp;gt; start.sh&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;chmod +x ./start.sh&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;之后执行 &lt;code&gt;./start.sh&lt;/code&gt;即可&lt;/p&gt;">
+<meta name="theme-color" content="#1C1C1F">
+<link rel="stylesheet" href="/css/var.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    
+
+<link rel="stylesheet" href="/lib/snackbar.min.css">
+
+
+<script src="/lib/qrcode.min.js"></script>
+
+
+
+
+
+<script>var GLOBALCONFIG = {"root":"/","runtime":"2023-07-01 00:00:00","lazyload":{"enable":false,"error":"/img/acrylic.png"},"hightlight":{"enable":false,"limit":200},"lightbox":true,"randomlinks":false,"lang":{"theme":{"dark":"已切换至深色模式","light":"已切换至浅色模式"},"copy":{"success":"复制成功","error":"复制失败"},"backtop":"返回顶部","time":{"recent":"最近","yesterday":"昨天","berforeyesterday":"前天","daybefore":"天前","runtime":"天"},"sayhello":{"morning":"早上好","noon":"中午好","afternoon":"下午好","night":"晚上好","goodnight":"晚安","iam":"!  我是"},"search":{"empty":"搜索结果为空","hit":"已为您找到 ${query} 条结果","placeholder":"输入关键词快速查找"}},"covercolor":false,"comment":{"enable":false,"twikooUrl":null}};</script><script id="site-config">var PAGECONFIG = {"is_home":false,"is_post":true,"is_page":false,"page":false,"toc":true,"comment":false};</script>
+    <meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Ryan's Blog" type="application/atom+xml">
+</head>
+    <body id="body">
+        
+        <div id="console" style="zoom: 1;" class="">
+    <div class="close-btn" onclick="acrylic.hideConsole()" href="javascript:void(0);">
+        <i class="fas fa-circle-xmark"></i>
+    </div>
+    
+        <div class="console-card-group">
+            <div class="console-card-group-left">
+                <div class="console-card" id="card-newest-comments" onclick="acrylic.hideConsole()">
+                    <div class="card-content">
+                        <div class="author-content-item-tips">互动</div>
+                        <div class="author-content-item-title">最新评论</div>
+                    </div>
+                    <div class="aside-list"></div>
+                </div>
+    
+            </div>
+            <div class="console-card-group-right">
+                <div class="console-card tags" onclick="acrylic.hideConsole()">
+                    <div class="card-content">
+                        <div class="author-content-item-tips">标签</div>
+                        <div class="author-content-item-title">寻找感兴趣的领域</div>
+                    </div>
+                    <div class="card-tag-cloud">
+                        
+                            <a href="/tags/%E9%A5%A5%E8%8D%92/" style="font-size: 0.8rem; color: #d3d3d3">饥荒<sup>1</sup></a>
+                        
+                            <a href="/tags/react/" style="font-size: 0.8rem; color: #d3d3d3">react<sup>1</sup></a>
+                        
+                    </div>
+                </div>
+                <div class="console-card history" onclick="acrylic.hideConsole()">
+                    <ul class="card-archive-list">
+    
+     
+        <li class="card-archive-list-item"><a class="card-archive-list-link" onclick="pjax.loadUrl('/archives/2023-07/')" data-pjax-state=""><span
+            class="card-archive-list-date">2023-07</span>
+            <div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span
+                    class="card-archive-list-count-unit">篇</span></div>
+            </a>
+        </li>
+        
+</ul>
+
+                </div>
+            </div>
+        </div>
+    
+    
+    <div class="button-group">
+        <div class="console-btn-item"> <a class="darkmode_switchbutton" onclick="acrylic.switchDarkMode()" title="显示模式切换"
+                href="javascript:void(0);" rel="external nofollow" data-pjax-state=""><i class="fas fa-moon"
+                    style="font-size: 1rem;"></i></a></div>
+        
+    </div>
+    <div class="console-mask" onclick="acrylic.hideConsole()" href="javascript:void(0);" rel="external nofollow"></div>
+</div>
+        <div id="sidebar" style="zoom: 1;">
+    <div id="menu-mask" style="display: none;"></div>
+    <div id="sidebar-menus" class>
+        <span class="sidebar-menu-item-title">功能</span>
+        <div class="sidebar-menu-item">
+            <a class="darkmode_switchbutton menu-child" onclick="acrylic.switchDarkMode()" title="显示模式切换"
+                href="javascript:void(0);" rel="external nofollow">
+                <i class="fas fa-moon" style="font-size: 1rem;"></i>
+                <span>显示模式</span>
+            </a>
+        </div>
+        
+            <div class="back-menu-list-groups">
+    
+      
+      <div class="back-menu-list-group">
+        <div class="back-menu-list-title">
+          我的
+        </div>
+        <div class="back-menu-list">
+          
+            
+            <a class="back-menu-item" href="/" rel="external nofollow" title="博客">
+              <img class="back-menu-item-icon" src="/img/avatar.jpeg" loading="lazy">
+              <span class="back-menu-item-text">
+                博客
+              </span>
+            </a>
+          
+        </div>
+      </div>
+    
+  </div>
+  
+        
+        <div class="menus_items">
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 文库</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" href="/archives/">
+                                <i class="fas fa-box-archive"></i>
+                                <span> 文章列表</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/categories/">
+                                <i class="fas fa-cube"></i>
+                                <span> 全部分类</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/tags/">
+                                <i class="fas fa-tags"></i>
+                                <span> 全部标签</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 更多站点</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" target="_blank" rel="noopener" href="https://xhyx.ryanamigo.com">
+                                <i class="fas fa-keyboard"></i>
+                                <span> 在线小鹤音形练习</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+</div>
+        <span class="sidebar-menu-item-title">标签</span>
+        <div class="card-widget card-tags card-archives card-webinfo card-allinfo">
+            <div class="item-headline">
+                <i class="fas fa-tags"></i>
+                <span>标签</span>
+            </div>
+            <div class="card-tag-cloud">
+                
+                    <a href="/tags/%E9%A5%A5%E8%8D%92/" style="font-size: 1em; color: #d3d3d3">饥荒
+                        <sup>1</sup>
+                    </a>
+                
+                    <a href="/tags/react/" style="font-size: 1em; color: #d3d3d3">react
+                        <sup>1</sup>
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+</div>    
+        
+            <div class="post" id="body-wrap">
+                <header class="post-bg" id="page-header">
+    <nav id="nav" class="show">
+    <div id="nav-group">
+        <div id="blog_name">
+            
+                <div class="back-home-button" tabindex="-1">
+                    <i class="back-home-button-icon fas fa-grip-vertical"></i>
+                    <div class="back-menu-list-groups">
+    
+      
+      <div class="back-menu-list-group">
+        <div class="back-menu-list-title">
+          我的
+        </div>
+        <div class="back-menu-list">
+          
+            
+            <a class="back-menu-item" href="/" rel="external nofollow" title="博客">
+              <img class="back-menu-item-icon" src="/img/avatar.jpeg" loading="lazy">
+              <span class="back-menu-item-text">
+                博客
+              </span>
+            </a>
+          
+        </div>
+      </div>
+    
+  </div>
+  
+                </div>
+            
+            <a id="site-name" href="/" title="返回博客主页">
+                    
+            </a>
+        </div>
+        <div id="page-name-mask">
+            <div id="page-name">
+                <a id="page-name-text" onclick="acrylic.toTop()">使用docker开饥荒联机版服务器</a>
+            </div>
+        </div>
+        <div id="menus">
+            <div class="menus_items">
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 文库</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" href="/archives/">
+                                <i class="fas fa-box-archive"></i>
+                                <span> 文章列表</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/categories/">
+                                <i class="fas fa-cube"></i>
+                                <span> 全部分类</span>
+                            </a>
+                        </li>
+                    
+                        <li>
+                            <a class="site-page child" href="/tags/">
+                                <i class="fas fa-tags"></i>
+                                <span> 全部标签</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+        <div class="menus_item">
+            
+                <a class="site-page" href="javascript:void(0);" rel="external nofollow">
+                    <span> 更多站点</span>
+                </a>
+                <ul class="menus_item_child">
+                    
+                        <li>
+                            <a class="site-page child" target="_blank" rel="noopener" href="https://xhyx.ryanamigo.com">
+                                <i class="fas fa-keyboard"></i>
+                                <span> 在线小鹤音形练习</span>
+                            </a>
+                        </li>
+                    
+                </ul>
+             
+        </div>
+    
+</div>
+        </div>
+        <!-- <div id="nav-left">
+            <div id="fps-group">
+                <div id="fps">145</div><span class="fpsText">FPS</span>
+            </div>
+        </div> -->
+        <div id="nav-right">
+            
+
+    <div class="nav-button" id="randomPost_button">
+        <a class="site-page" onclick="toRandomPost()"
+            title="随机前往一个文章">
+            <i class="fas fa-shuffle" style="font-size: 1rem;"></i>
+        </a>
+    </div>
+
+
+
+    <div class="nav-button" id="nav-console">
+        <a class="console_switchbutton" onclick="acrylic.showConsole()"
+        title="显示中控台" href="javascript:void(0);" rel="external nofollow">
+        <i class="fas fa-bars-progress" style="font-size: 1rem;"></i>
+        </a>
+    </div>
+
+<div class="nav-button" id="nav-totop" onclick="acrylic.toTop()">
+    <a class="totopbtn">
+        <i class="fas fa-arrow-up"></i>
+        <span id="percent">0</span>
+    </a>
+</div>
+<div id="toggle-menu">
+    <a class="site-page">
+        <i class="fas fa-bars fa-fw" style="font-size: 1rem;"></i>
+    </a>
+</div>
+        </div>
+    </div>
+</nav>
+    
+        <div class="coverdiv" id="coverdiv">
+    <img id="post-cover" class="nolazyload" src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/dst-cover.jpg" alt="cover">
+</div>
+<div id="post-info">
+    <div id="post-firstinfo">
+        <div class="meta-firstline">
+            <a class="post-meta-original" title="该文章为原创文章，注意版权协议">
+                原创
+            </a>
+            
+            <span class="post-meta-categories">
+                
+                    <a class="post-meta-categories" href="/categories/%E6%B8%B8%E6%88%8F/">游戏</a>
+                
+            </span>
+            
+            <div class="tag_share">
+                <div class="post-meta__tag-list">
+                    
+                        <a class="post-meta__tags" href="/tags/%E9%A5%A5%E8%8D%92/">
+                            <span class="tags-punctuation">#</span>
+                            <span class="tags-name">饥荒</span>
+                        </a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="post-title">使用docker开饥荒联机版服务器</h1>
+    <div id="post-meta">
+        <div class="meta-secondline">
+            <span class="post-meta-date" title="发布于">
+                <i class="post-meta-icon fa-fw fas fa-calendar"></i>
+                <time datetime="2023-07-06T14:42:20+00:00"></time>
+            </span>
+            
+            
+                <span class="post-meta-position" title="作者IP归属地为西安">
+                    <i class="fas fa-location-dot post-meta-icon"></i>
+                    <span>西安</span>
+                </span>
+            
+            
+                
+                
+            
+            
+                
+        </div>
+    </div>
+</div>
+<section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg"
+    xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+    <defs>
+        <path id="gentle-wave"
+            d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path>
+    </defs>
+    <g class="parallax">
+        <use href="#gentle-wave" x="48" y="0"></use>
+        <use href="#gentle-wave" x="48" y="3"></use>
+        <use href="#gentle-wave" x="48" y="5"></use>
+        <use href="#gentle-wave" x="48" y="7"></use>
+    </g>
+</svg>
+</section>
+
+        
+</header>
+                <main class="layout" id="content-inner">
+    <div id="post">
+        <article class="post-content" id="article-container">
+            <h2 id="选择镜像"><a href="#选择镜像" class="headerlink" title="选择镜像"></a>选择镜像</h2><p>目前持续更新，并且稳定的镜像是<a target="_blank" rel="noopener" href="https://hub.docker.com/r/jamesits/dst-server">jamesits提供的镜像</a>，详细文档可访问<a target="_blank" rel="noopener" href="https://github.com/Jamesits/docker-dst-server">github</a>。</p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><h3 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a>docker run</h3><p>使用普通的docker-run命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -v ./DoNotStarveTogether:/data -d -p 10999-11000:10999-11000/udp -p 12346-12347:12346-12347/udp -e &quot;DST_SERVER_ARCH=amd64&quot; -it jamesits/dst-server:latest</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-v</code>的意思是将本机的当前目录下的<code>DoNotStarveTogether</code>文件夹映射到docker容器中，这样把容器删除后也不会丢失数据</li>
+<li><code>-p</code>的意思是将本机的10999 11000 12346 12347这4个udp端口映射到容器对应的端口</li>
+<li><code>-e</code>的意思是设置容器启动的环境变量，即amd64架构</li>
+<li><code>it</code>的意思是以交互模式运行容器(i)，并为容器重新分配一个伪输入终端(t)</li>
+</ul>
+<p>建议把命令写在一个文件中，方便执行，例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;docker run -v ./DoNotStarveTogether:/data -d -p 10999-11000:10999-11000/udp -p 12346-12347:12346-12347/udp -e &quot;DST_SERVER_ARCH=amd64&quot; -it jamesits/dst-server:latest&quot; &gt;&gt; start.sh</span><br><span class="line">chmod +x ./start.sh</span><br></pre></td></tr></table></figure>
+<p>之后执行 <code>./start.sh</code>即可</p>
+<span id="more"></span>
+
+<h3 id="docker-compose"><a href="#docker-compose" class="headerlink" title="docker-compose"></a>docker-compose</h3><p><a target="_blank" rel="noopener" href="https://github.com/Jamesits/docker-dst-server">jamesits</a>提供了docker-compose配置，可直接使用，这样更方便与服务器上的其他容器一起管理</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.5&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">dst-server:</span></span><br><span class="line">     <span class="attr">image:</span> <span class="string">jamesits/dst-server:latest</span></span><br><span class="line">     <span class="attr">restart:</span> <span class="string">&quot;on-failure:5&quot;</span></span><br><span class="line">     <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;10999-11000:10999-11000/udp&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;12346-12347:12346-12347/udp&quot;</span></span><br><span class="line">     <span class="attr">volumes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">~/.klei/DoNotStarveTogether:/data</span></span><br><span class="line">     <span class="attr">stop_grace_period:</span> <span class="string">6m</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="服务配置"><a href="#服务配置" class="headerlink" title="服务配置"></a>服务配置</h2><p>容器启动后会看到多了一个目录<code>DontStarveTogether</code></p>
+<h3 id="token"><a href="#token" class="headerlink" title="token"></a>token</h3><p>饥荒开服需要从Klei获取自己账号的token，获取地址在<a target="_blank" rel="noopener" href="https://accounts.klei.com/account/game/servers?game=DontStarveTogether">这里</a><br><img src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/dst-1.jpg"><br>获取到token后，将token放到<code>./DoNotStarveTogether/DoNotStarveTogether/Cluster_1/cluster_token.txt</code>文件中</p>
+<h3 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h3><p><code>cluster.ini</code>配置了服务器的基本信息</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; Here is all the server configs you will ever want to change</span></span><br><span class="line"><span class="section">[NETWORK]</span></span><br><span class="line"><span class="comment">; DO change the name and description please!</span></span><br><span class="line"><span class="attr">cluster_name</span> = xxxx</span><br><span class="line"><span class="attr">cluster_description</span> = xxxxxx</span><br><span class="line"><span class="attr">cluster_password</span> = axxxx111111</span><br><span class="line"><span class="comment">; 最好把这个加上，要不人物说的都是英文</span></span><br><span class="line"><span class="attr">cluster_language</span> = zh</span><br><span class="line"><span class="attr">offline_cluster</span> = <span class="literal">false</span></span><br><span class="line"><span class="attr">lan_only_cluster</span> = <span class="literal">false</span></span><br><span class="line"><span class="attr">whitelist_slots</span> = <span class="number">1</span></span><br><span class="line"><span class="attr">cluster_intention</span> = social</span><br><span class="line"><span class="attr">autosaver_enabled</span> = <span class="literal">true</span></span><br><span class="line"><span class="comment">;tick_rate = 30</span></span><br><span class="line"></span><br><span class="line"><span class="section">[GAMEPLAY]</span></span><br><span class="line"><span class="attr">game_mode</span> = endless</span><br><span class="line"><span class="attr">max_players</span> = <span class="number">8</span></span><br><span class="line"><span class="attr">pvp</span> = <span class="literal">false</span></span><br><span class="line"><span class="attr">pause_when_empty</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">vote_kick_enabled</span> = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="section">[STEAM]</span></span><br><span class="line"><span class="attr">steam_group_only</span> = <span class="literal">false</span></span><br><span class="line"><span class="attr">steam_group_id</span> = <span class="number">0</span></span><br><span class="line"><span class="attr">steam_group_admins</span> = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="section">[MISC]</span></span><br><span class="line"><span class="attr">console_enabled</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">max_snapshots</span> = <span class="number">6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; ====================================================================</span></span><br><span class="line"><span class="comment">; STOP! Don&#x27;t change configs below unless you know what you are doing.</span></span><br><span class="line"><span class="comment">; ====================================================================</span></span><br><span class="line"><span class="section">[SHARD]</span></span><br><span class="line"><span class="attr">shard_enabled</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">bind_ip</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="attr">master_ip</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="attr">master_port</span> = <span class="number">10998</span></span><br><span class="line"><span class="attr">cluster_key</span> = xxxxxx</span><br></pre></td></tr></table></figure>
+
+<p>最好在<code>NETWORK</code>中加上<code>cluster_language = zh</code>，要不人物说的都是英文。更多配置见下方附录</p>
+<h3 id="管理员"><a href="#管理员" class="headerlink" title="管理员"></a>管理员</h3><p>你的Token中，两个<code>^</code>符号中间就是你的Klei账号id，在<code>adminlist.txt</code>中粘贴Klei账号id即可(不要带上^)</p>
+<h2 id="mod配置"><a href="#mod配置" class="headerlink" title="mod配置"></a>mod配置</h2><p>饥荒服务器使用mod有两个步骤</p>
+<ol>
+<li>添加&#x2F;下载mod</li>
+<li>启用mod</li>
+</ol>
+<h3 id="添加-下载mod"><a href="#添加-下载mod" class="headerlink" title="添加&#x2F;下载mod"></a>添加&#x2F;下载mod</h3><p>在刚才的文件目录中，有一个<code>mods</code>目录，完整路径<code>./DoNotStarveTogether/DoNotStarveTogether/Cluster_1/mods</code>,这里有一个文件，<code>dedicated_server_mods_setup.lua</code>，这里配置需要下载的mod，例如</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 血条</span></span><br><span class="line">ServerModSetup(<span class="string">&quot;1185229307&quot;</span>)</span><br><span class="line"><span class="comment">-- 防卡</span></span><br><span class="line">ServerModSetup(<span class="string">&quot;2505341606&quot;</span>)</span><br><span class="line"><span class="comment">-- 智能小木牌</span></span><br><span class="line">ServerModSetup(<span class="string">&quot;1595631294&quot;</span>)</span><br><span class="line"><span class="comment">-- 4/5/6格装备栏</span></span><br><span class="line">ServerModSetup(<span class="string">&quot;2798599672&quot;</span>)</span><br><span class="line"><span class="comment">-- Show Me(中文)</span></span><br><span class="line">ServerModSetup(<span class="string">&quot;2287303119&quot;</span>)</span><br><span class="line"><span class="comment">-- Global Positions</span></span><br><span class="line">ServerModSetup(<span class="string">&quot;378160973&quot;</span>)</span><br><span class="line"><span class="comment">-- 人物 黎明卿-波多尔多</span></span><br><span class="line">ServerModSetup(<span class="string">&quot;2865408620&quot;</span>)</span><br><span class="line"><span class="comment">-- 身在福中不知福</span></span><br><span class="line">ServerModSetup(<span class="string">&quot;2543193992&quot;</span>)</span><br><span class="line"><span class="comment">-- fast travel</span></span><br><span class="line">ServerModSetup(<span class="string">&quot;2119742489&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>方法中的数字是mod的id，在创意工坊页面url的参数中<br><img src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/dst-2.jpg"><br>容器启动的时候会去下载这些mod</p>
+<h3 id="启用mod"><a href="#启用mod" class="headerlink" title="启用mod"></a>启用mod</h3><p>启用mod的方式比较麻烦，需要写每个mod的配置,文件有两个，<br>DoNotStarveTogether&#x2F;DoNotStarveTogether&#x2F;Cluster_1&#x2F;Master&#x2F;modoverrides.lua (地面世界)<br>DoNotStarveTogether&#x2F;DoNotStarveTogether&#x2F;Cluster_1&#x2F;Caves&#x2F;modoverrides.lua (洞穴世界)</p>
+<p>他们的大致结构是这样的</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">retrurn &#123;</span><br><span class="line">  [<span class="string">&quot;workshop-1185229307&quot;</span>]=&#123;</span><br><span class="line">    configuration_options=&#123;</span><br><span class="line">      <span class="comment">-- 这里是mod自己的配置，每个mod都不同</span></span><br><span class="line">    &#125;,</span><br><span class="line">    enabled=<span class="literal">true</span>  <span class="comment">-- 这里启用了mod</span></span><br><span class="line">  &#125;,</span><br><span class="line">  [<span class="string">&quot;workshop-1595631294&quot;</span>]=&#123;</span><br><span class="line">    configuration_options=&#123;</span><br><span class="line">      <span class="comment">-- 这里是mod自己的配置，每个mod都不同</span></span><br><span class="line">    &#125;,</span><br><span class="line">    enabled=<span class="literal">true</span>  <span class="comment">-- 这里启用了mod</span></span><br><span class="line">  &#125;, </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中 configuration_options中的配置我们是不知道的。<br>比较方便的做法是把mod在自己的电脑上启动，用自己的电脑开服找到上面的两个文件（windows系统的路径在 <code>文档/Klei/...</code>中，稍微找一下就找到了），复制内容，粘贴到服务器上。</p>
+<p>两个都配置完成后，需要重启容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用docker ps查看容器<span class="built_in">id</span>, 也就是CONTAINER ID下面的</span></span><br><span class="line">docker ps </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启容器</span></span><br><span class="line">docker restart 79ee0986e0ed</span><br></pre></td></tr></table></figure>
+<p>启动时可以查看启动日志，<code>docker logs 79ee0986e0ed --tail 50 -f</code>，要关闭日志，使用<code>Ctrl C</code>即可</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>饥荒基本配置，cluster.ini文件的所有配置项<br>[GAMEPLAY]</p>
+<ul>
+<li><p>game_mode（游戏模式）</p>
+<p>默认值： survival（生存）。</p>
+<p>只有 survival（生存）、 endless（无尽） 、wilderness（荒野）这3种游戏模式。</p>
+</li>
+<li><p>max_players（最大人数）</p>
+<p>默认值：16。</p>
+<p>服务器内玩家同时在线的最大人数。</p>
+</li>
+<li><p>pvp（ pvp 模式）</p>
+<p>默认值：false。</p>
+<p>pvp 模式下，玩家可以互相伤害。</p>
+</li>
+<li><p>pause_when_empty</p>
+<p>默认值：true。</p>
+<p>服务器内没有玩家在线时，暂停服务器。</p>
+</li>
+</ul>
+<p>[NETWORK]</p>
+<ul>
+<li><p>lan_only_cluster（局域网游戏）</p>
+<p>默认值：false。</p>
+<p>只允许同一个局域网中的玩家加入。</p>
+</li>
+<li><p>cluster_intention（游戏风格）</p>
+<p>默认值：无。</p>
+<p>只有 cooperative（合作）、 competitive（竞争）、social（社交）、madness（疯狂）这4种游戏风格，对游戏无任何影响。</p>
+</li>
+<li><p>cluster_password（服务器密码）</p>
+<p>默认值：空。</p>
+<p>服务器密码为空时，玩家加入不需要输入密码，否则需要输入密码。</p>
+</li>
+<li><p>cluster_description（服务器描述）</p>
+<p>默认值：空。</p>
+<p>服务器的描述。</p>
+</li>
+<li><p>cluster_name（服务器名）</p>
+<p>默认值：无。</p>
+<p>服务器的名字。</p>
+</li>
+<li><p>offline_cluster（离线）</p>
+<p>默认值：false。</p>
+<p>创建一个离线服务器，该服务器不会公开。只有本地网络上的玩家才能加入，任何与 Steam 相关的功能都将无法使用。</p>
+</li>
+<li><p>cluster_language（服务器语言）</p>
+<p>默认值：无。</p>
+<p>服务器内显示的语言。</p>
+</li>
+<li><p>whitelist_slots（白名单席位）</p>
+<p>默认值：0。</p>
+<p>为白名单玩家预留的空位，只有白名单玩家才能加入。</p>
+</li>
+</ul>
+<p>[MISC]</p>
+<ul>
+<li><p>console_enabled（启用控制台）</p>
+<p>默认值：true。</p>
+<p>允许玩家在控制台中输入命令。</p>
+</li>
+</ul>
+<p>[SHARD]</p>
+<ul>
+<li>shard_enabled（启用共享）</li>
+</ul>
+<p>默认值：false。</p>
+<p>启用服务器共享。对于多层世界，值必须是 true。对于单层世界，值可以省略。</p>
+<ul>
+<li>bind_ip</li>
+</ul>
+<p>默认值：127.0.0.1。</p>
+<p>这是 主世界 将侦听其他 从世界 连接到的网络地址。如果所有服务器都在同一台机器上，则将此设置为 127.0.0.1，如果服务器在不同的机器上，则将其设置为 0.0.0.0。</p>
+<ul>
+<li>master_ip（主 ip）</li>
+</ul>
+<p>默认值：无。</p>
+<p>从世界 在尝试连接到 主世界 时将使用的 IP 地址。如果所有服务器都在同一台机器上，请将其设置为 127.0.0.1。如果所有服务器不在同一台机器上，请将其设置为 运行主世界的那台机器的公网 ip。</p>
+<ul>
+<li>master_port（主端口）</li>
+</ul>
+<p>默认值：10888。</p>
+<p>这是 主世界 将侦听的 UDP 端口，从世界 在尝试连接到 主世界 时将使用该端口。所有的机器上的 master_port 必须保持一致，而且不能和同一台机器上的 server_port 相同。</p>
+<ul>
+<li>cluster_key（服务器认证密码）</li>
+</ul>
+<p>默认值：无。</p>
+<p>主世界 验证 从世界 的密码。如果所有世界都在同一台机器上，则只需要设置一次。所有的世界运行在不同的机器上，值只能保持一致。</p>
+<h3 id="控制台命令"><a href="#控制台命令" class="headerlink" title="控制台命令"></a>控制台命令</h3><p><code>c_give(“XX”, 10)</code>  –——直接把10个xx放包里<br><code>c_spawn(“XX”，10)</code> ——把10个xx放鼠标指针指示的地上<br><code>TheInput:GetWorldEntityUnderMouse():Remove()</code> 删除鼠标指着的物品</p>
+<h2 id="物品代码"><a href="#物品代码" class="headerlink" title="物品代码"></a>物品代码</h2><h3 id="材料"><a href="#材料" class="headerlink" title="材料"></a>材料</h3><p>cutgrass 草</p>
+<p>twigs 树枝</p>
+<p>log 木头</p>
+<p>charcoal 木炭</p>
+<p>ash 灰</p>
+<p>cutreeds 采下的芦苇</p>
+<p>lightbulb 荧光果</p>
+<p>petals 花瓣</p>
+<p>petals_evil 噩梦花瓣</p>
+<p>pinecone 松果</p>
+<p>foliage 叶子</p>
+<p>cutlichen 摘下的苔藓</p>
+<p>wormlight 虫子果</p>
+<p>lureplantbulb 食人花种子</p>
+<p>flint 燧石</p>
+<p>nitre 硝石</p>
+<p>redgem 红宝石</p>
+<p>bluegem 蓝宝石</p>
+<p>purplegem 紫宝石</p>
+<p>greengem 绿宝石</p>
+<p>orangegem 橙宝石</p>
+<p>yellowgem 黄宝石</p>
+<p>rocks 岩石</p>
+<p>goldnugget 黄金</p>
+<p>thulecite 铥矿石</p>
+<p>thulecite_pieces 铥矿碎片</p>
+<p>rope 绳子</p>
+<p>boards 木板</p>
+<p>cutstone 石砖</p>
+<p>papyrus 纸</p>
+<p>houndstooth 犬牙</p>
+<p>pigskin 猪皮</p>
+<p>manrabbit_tail 兔人尾巴</p>
+<p>silk 蜘蛛丝</p>
+<p>spidergland 蜘蛛腺体</p>
+<p>spidereggsack 蜘蛛卵</p>
+<p>beardhair 胡子</p>
+<p>beefalowool 牛毛</p>
+<p>honeycomb 蜂巢</p>
+<p>stinger 蜂刺</p>
+<p>walrus_tusk 海象牙</p>
+<p>feather_crow 乌鸦羽毛</p>
+<p>feather_robin 红雀羽毛</p>
+<p>feather_robin_winter 雪雀羽毛</p>
+<p>horn 牛角</p>
+<p>tentaclespots 触手皮</p>
+<p>trunk_summer 夏象鼻</p>
+<p>trunk_winter 冬象鼻</p>
+<p>slurtleslime 蜗牛龟粘液</p>
+<p>slurtle_shellpieces 蜗牛龟壳片</p>
+<p>butterflywings 蝴蝶翅膀</p>
+<p>mosquitosack 蚊子血囊</p>
+<p>slurper_pelt 啜食者皮</p>
+<h3 id="工具-武器"><a href="#工具-武器" class="headerlink" title="工具&#x2F;武器"></a>工具&#x2F;武器</h3><p>minotaurhorn 远古守护者角</p>
+<p>deerclops_eyeball 巨鹿眼球</p>
+<p>lightninggoathorn 闪电羊角</p>
+<p>glommerwings 格罗门翅膀</p>
+<p>glommerflower 格罗门花</p>
+<p>glommerfuel 格罗门燃料</p>
+<p>livinglog 活木头</p>
+<p>nightmarefuel 噩梦燃料</p>
+<p>gears 齿轮</p>
+<p>transistor 晶体管</p>
+<p>marble 大理石</p>
+<p>boneshard 硬骨头</p>
+<p>ice 冰</p>
+<p>poop 便便</p>
+<p>guano 鸟粪</p>
+<p>dragon_scales 蜻蜓鳞片</p>
+<p>goose_feather 鹿鸭羽毛</p>
+<p>coontail 浣熊尾巴</p>
+<p>bearger_fur 熊皮</p>
+<p>axe 斧子</p>
+<p>goldenaxe 黄金斧头</p>
+<p>lucy 露西斧子</p>
+<p>hammer 锤子</p>
+<p>pickaxe 镐</p>
+<p>goldenpickaxe 黄金镐</p>
+<p>shovel 铲子</p>
+<p>goldenshovel 黄金铲子</p>
+<p>pitchfork 草叉</p>
+<p>razor 剃刀</p>
+<p>bugnet 捕虫网</p>
+<p>fishingrod 鱼竿</p>
+<p>multitool_axe_pickaxe 多功能工具</p>
+<p>cane 行走手杖</p>
+<p>trap 陷阱</p>
+<p>birdtrap 鸟陷阱</p>
+<p>trap_teeth 牙齿陷阱</p>
+<p>trap_teeth_maxwell 麦斯威尔的牙齿陷阱</p>
+<p>backpack 背包</p>
+<p>piggyback 猪皮包</p>
+<p>krampus_sack 坎普斯背包</p>
+<p>umbrella 雨伞</p>
+<p>grass_umbrella 草伞</p>
+<p>heatrock 保温石</p>
+<p>bedroll_straw 草席卷</p>
+<p>bedroll_furry 毛皮铺盖</p>
+<p>torch 火炬</p>
+<p>lantern 提灯</p>
+<p>pumpkin_lantern 南瓜灯</p>
+<p>compass 指南针</p>
+<p>fertilizer 化肥</p>
+<p>firesuppressor 灭火器</p>
+<p>sewing_kit 缝纫工具包</p>
+<p>spear 矛</p>
+<p>boomerang 回旋镖</p>
+<p>tentaclespike 狼牙棒</p>
+<p>blowdart_pipe 吹箭</p>
+<p>blowdart_sleep 麻醉吹箭</p>
+<p>blowdart_fire 燃烧吹箭</p>
+<p>hambat 火腿短棍</p>
+<p>nightsword 暗影剑</p>
+<p>batbat 蝙蝠棒</p>
+<p>ruins_bat 远古短棒</p>
+<p>spear_wathgrithr 瓦丝格雷斯矛</p>
+<p>panflute 排箫</p>
+<p>onemanband 独奏乐器</p>
+<p>gunpowder 火药</p>
+<p>beemine 蜜蜂地雷</p>
+<p>bell 铃</p>
+<p>amulet 红色护身符</p>
+<p>blueamulet 蓝色护身符</p>
+<p>purpleamulet 紫色护身符</p>
+<p>yellowamulet 黄色护身符</p>
+<p>orangeamulet 橙色护身符</p>
+<p>greenamulet 绿色护身符</p>
+<p>nightmare_timepiece 铥矿奖章</p>
+<p>icestaff 冰魔杖</p>
+<p>firestaff 火魔杖</p>
+<p>telestaff 传送魔杖</p>
+<p>orangestaff 橙色魔杖</p>
+<h3 id="装备"><a href="#装备" class="headerlink" title="装备"></a>装备</h3><p>strawhat 草帽</p>
+<p>flowerhat 花环</p>
+<p>greenstaff 绿色魔杖</p>
+<p>yellowstaff 黄色魔杖</p>
+<p>diviningrod 探矿杖</p>
+<p>book_birds 召唤鸟的书</p>
+<p>book_tentacles 召唤触手的书</p>
+<p>book_gardening 催生植物的书</p>
+<p>book_sleep 催眠的书</p>
+<p>book_brimstone 召唤闪电的书</p>
+<p>waxwelljournal 麦斯威尔的日志</p>
+<p>abigail_flower 阿比盖尔之花</p>
+<p>balloons_empty 空气球</p>
+<p>balloon 气球</p>
+<p>lighter 薇洛的打火机</p>
+<p>chester_eyebone 切斯特骨眼</p>
+<p>featherfan 羽毛扇</p>
+<p>staff_tornado 龙卷风魔杖</p>
+<p>nightstick 夜棍</p>
+<p>beefalohat 牛毛帽</p>
+<p>featherhat 羽毛帽</p>
+<p>footballhat 猪皮帽</p>
+<p>tophat 高礼帽</p>
+<p>earmuffshat 兔耳罩</p>
+<p>winterhat 冬帽</p>
+<p>minerhat 矿工帽</p>
+<p>spiderhat 蜘蛛帽</p>
+<p>beehat 蜂帽</p>
+<p>walrushat 海象帽</p>
+<p>slurtlehat 蜗牛帽子</p>
+<p>bushhat 丛林帽</p>
+<p>ruinshat 远古王冠</p>
+<p>rainhat 防雨帽</p>
+<p>icehat 冰帽</p>
+<p>watermelonhat 西瓜帽</p>
+<p>catcoonhat 浣熊帽</p>
+<p>wathgrithrhat 瓦丝格雷斯帽</p>
+<p>armorwood 木盔甲</p>
+<h3 id="建筑"><a href="#建筑" class="headerlink" title="建筑"></a>建筑</h3><p>campfire 营火</p>
+<p>firepit 石头营火</p>
+<p>armorgrass 草盔甲</p>
+<p>armormarble 大理石盔甲</p>
+<p>armor_sanity 夜魔盔甲</p>
+<p>armorsnurtleshell 蜗牛龟盔甲</p>
+<p>armorruins 远古盔甲</p>
+<p>sweatervest 小巧背心</p>
+<p>trunkvest_summer 夏日背心</p>
+<p>trunkvest_winter 寒冬背心</p>
+<p>armorslurper 饥饿腰带</p>
+<p>raincoat 雨衣</p>
+<p>webberskull 韦伯头骨</p>
+<p>molehat 鼹鼠帽</p>
+<p>armordragonfly 蜻蜓盔甲</p>
+<p>beargervest 熊背心</p>
+<p>eyebrellahat 眼睛帽</p>
+<p>reflectivevest 反射背心</p>
+<p>hawaiianshirt 夏威夷衬衫</p>
+<p>coldfire 冷火</p>
+<p>coldfirepit 石头冷火</p>
+<p>cookpot 锅</p>
+<p>icebox 冰箱</p>
+<p>winterometer 寒冰温度计</p>
+<p>rainometer 雨量计</p>
+<p>slow_farmplot 一般农田</p>
+<p>fast_farmplot 高级农田</p>
+<p>siestahut 午睡小屋</p>
+<p>tent 帐篷</p>
+<p>homesign 路牌</p>
+<p>birdcage 鸟笼</p>
+<p>meatrack 晾肉架</p>
+<p>lightning_rod 避雷针</p>
+<p>pottedfern 盆栽</p>
+<p>nightlight 暗夜照明灯</p>
+<p>nightmarelight 影灯</p>
+<p>researchlab 科学机器</p>
+<p>researchlab2 炼金术引擎</p>
+<p>researchlab3 阴影操纵者</p>
+<p>researchlab4 灵子分解器</p>
+<p>treasurechest 木箱</p>
+<p>skullchest 骷髅箱</p>
+<p>pandoraschest 华丽的箱子</p>
+<p>minotaurchest 大华丽的箱子</p>
+<p>wall_hay_item 草墙</p>
+<p>wall_wood_item 木墙</p>
+<p>wall_stone_item 石墙</p>
+<p>wall_ruins_item 铥墙</p>
+<p>wall_hay 地上的草墙</p>
+<p>wall_wood 地上的木墙</p>
+<p>wall_stone 地上的石墙</p>
+<p>wall_ruins 地上的铥墙</p>
+<p>pighouse 猪房</p>
+<p>rabbithole 兔房</p>
+<p>mermhouse 鱼人房</p>
+<p>resurrectionstatue 肉块雕像</p>
+<p>resurrectionstone 重生石</p>
+<p>ancient_altar 远古祭坛</p>
+<p>ancient_altar_broken 损坏的远古祭坛</p>
+<p>telebase 传送核心</p>
+<p>gemsocket 宝石看台</p>
+<p>eyeturret 固定在地上的眼睛炮塔</p>
+<p>eyeturret_item 可带走的眼睛炮塔</p>
+<p>cave_exit 洞穴出口</p>
+<p>turf_woodfloor 木地板</p>
+<p>turf_carpetfloor 地毯地板</p>
+<p>turf_checkerfloor 棋盘地板</p>
+<p>adventure_portal 冒险之门</p>
+<p>rock_light 火山坑</p>
+<p>gravestone 墓碑</p>
+<p>mound 坟墓土堆</p>
+<p>skeleton 人骨</p>
+<p>houndbone 狗骨头</p>
+<p>animal_track 动物足迹</p>
+<p>dirtpile 可疑的土堆</p>
+<p>pond 池塘</p>
+<p>pond_cave 洞穴池塘</p>
+<p>pighead 猪头棍</p>
+<p>mermhead 鱼头棍</p>
+<p>pigtorch 猪火炬</p>
+<p>rabbithole 兔子洞</p>
+<p>beebox 蜂箱</p>
+<p>beehive 野生蜂窝</p>
+<p>wasphive 杀人蜂窝</p>
+<p>spiderhole 洞穴蜘蛛洞</p>
+<p>walrus_camp 海象窝</p>
+<p>tallbirdnest 高鸟窝</p>
+<p>houndmound 猎犬丘</p>
+<p>slurtlehole 蜗牛窝</p>
+<p>batcave 蝙蝠洞</p>
+<p>monkeybarrel 猴子桶</p>
+<p>spiderden 蜘蛛巢穴</p>
+<p>molehill 鼹鼠丘</p>
+<p>catcoonden 浣熊洞</p>
+<p>rock1 带硝石的岩石</p>
+<p>rock2 带黄金的岩石</p>
+<p>rock_flintless 只有石头的岩石</p>
+<p>stalagmite_full 大圆洞穴石头</p>
+<p>stalagmite_med 中圆洞穴石头</p>
+<p>stalagmite_low 小圆洞穴石头</p>
+<p>stalagmite_tall_full 大高洞穴石头</p>
+<p>stalagmite_tall_med 中高洞穴石头</p>
+<p>stalagmite_tall_low 小高洞穴石头</p>
+<p>rock_ice 冰石</p>
+<p>ruins_statue_head 远古头像</p>
+<p>ruins_statue_mage 远古法师雕像</p>
+<p>marblepillar 大理石柱子</p>
+<p>marbletree 大理石树</p>
+<p>statueharp 竖琴雕像</p>
+<p>basalt 玄武岩</p>
+<p>basalt_pillar 高玄武岩</p>
+<p>insanityrock 猪王矮柱石</p>
+<p>sanityrock 猪王高柱石</p>
+<p>ruins_chair 远古椅子</p>
+<p>ruins_vase 远古花瓶</p>
+<p>ruins_table 远古桌子</p>
+<p>statuemaxwell 麦斯威尔雕像</p>
+<p>statueglommer 格罗门雕像</p>
+<p>relic 废墟</p>
+<p>ruins_rubble 损毁的废墟</p>
+<p>bishop_nightmare 损坏的雕像</p>
+<p>rook_nightmare 损坏的战车</p>
+<p>knight_nightmare 损坏的骑士</p>
+<p>chessjunk1 损坏的机械1</p>
+<p>chessjunk2 损坏的机械2</p>
+<h3 id="食物"><a href="#食物" class="headerlink" title="食物"></a>食物</h3><p>carrot 胡萝卜</p>
+<p>chessjunk3 损坏的机械3</p>
+<p>teleportato_ring 环状传送机零件</p>
+<p>teleportato_box 盒状传送机零件</p>
+<p>teleportato_crank 曲柄状传送机零件</p>
+<p>teleportato_potato 球状传送机零件</p>
+<p>teleportato_base 传送机零件底座</p>
+<p>teleportato_checkmate 传送机零件底座</p>
+<p>wormhole 虫洞</p>
+<p>wormhole_limited_1 被限制的虫洞</p>
+<p>stafflight 小星星</p>
+<p>treasurechest_trap 箱子陷阱</p>
+<p>icepack 冰包</p>
+<p>dragonflychest 蜻蜓箱子</p>
+<p>carrot_cooked 熟胡萝卜</p>
+<p>cookedmonstermeat 熟疯肉</p>
+<p>monstermeat_dried 干疯肉</p>
+<p>plantmeat 食人花肉</p>
+<p>plantmeat_cooked 熟食人花肉</p>
+<p>honey 蜂蜜</p>
+<p>butter 黄油</p>
+<p>butterflymuffin 奶油松饼</p>
+<p>frogglebunwich 青蛙圆面包三明</p>
+<p>bird_egg 鸡蛋</p>
+<p>bird_egg_cooked 煮熟的鸡蛋</p>
+<p>rottenegg 烂鸡蛋</p>
+<p>tallbirdegg 高鸟蛋</p>
+<p>tallbirdegg_cooked 熟高鸟蛋</p>
+<p>tallbirdegg_cracked 孵化的高鸟蛋</p>
+<p>fish 鱼</p>
+<p>fish_cooked 熟鱼</p>
+<p>eel 鳗鱼</p>
+<p>eel_cooked 熟鳗鱼</p>
+<p>froglegs 蛙腿</p>
+<p>froglegs_cooked 熟蛙腿</p>
+<p>batwing 蝙蝠翅膀</p>
+<p>batwing_cooked 熟蝙蝠翅膀</p>
+<p>trunk_cooked 熟象鼻</p>
+<p>mandrake 曼德拉草</p>
+<p>cookedmandrake 熟曼特拉草</p>
+<p>honeyham 蜜汁火腿</p>
+<p>dragonpie 龙馅饼</p>
+<p>taffy 太妃糖</p>
+<p>pumpkincookie 南瓜饼</p>
+<p>kabobs 肉串</p>
+<p>powcake 芝士蛋糕</p>
+<p>mandrakesoup 曼德拉草汤</p>
+<p>baconeggs 鸡蛋火腿</p>
+<p>bonestew 肉汤</p>
+<p>perogies 半圆小酥饼</p>
+<p>wetgoop 湿腻焦糊</p>
+<p>ratatouille 蹩脚的炖菜</p>
+<p>fruitmedley 水果拼盘</p>
+<p>fishtacos 玉米饼包炸鱼</p>
+<p>waffles 华夫饼</p>
+<p>turkeydinner 火鸡正餐</p>
+<p>fishsticks 鱼肉条</p>
+<p>stuffedeggplant 香酥茄盒</p>
+<p>honeynuggets 甜蜜金砖</p>
+<p>meatballs 肉丸</p>
+<p>jammypreserves 果酱蜜饯</p>
+<p>monsterlasagna 怪物千层饼</p>
+<p>unagi 鳗鱼料理</p>
+<p>bandage 蜂蜜绷带</p>
+<p>healingsalve 治疗药膏</p>
+<p>carrot 胡萝卜</p>
+<p>chessjunk3 损坏的机械3</p>
+<p>teleportato_ring 环状传送机零件</p>
+<p>teleportato_box 盒状传送机零件</p>
+<p>teleportato_crank 曲柄状传送机零件</p>
+<p>teleportato_potato 球状传送机零件</p>
+<p>teleportato_base 传送机零件底座</p>
+<p>teleportato_checkmate 传送机零件底座</p>
+<p>wormhole 虫洞</p>
+<p>wormhole_limited_1 被限制的虫洞</p>
+<p>stafflight 小星星</p>
+<p>treasurechest_trap 箱子陷阱</p>
+<p>icepack 冰包</p>
+<p>dragonflychest 蜻蜓箱子</p>
+<p>carrot_cooked 熟胡萝卜</p>
+<p>cave_banana_tree 洞穴香蕉树</p>
+<p>mushtree_small 小蘑菇树</p>
+<p>livingtree 活树</p>
+<p>deciduoustree 橡树</p>
+<p>deciduoustree_tall 高橡树</p>
+<p>deciduoustree_short 矮橡树</p>
+<p>red_mushroom 红蘑菇</p>
+<p>green_mushroom 绿蘑菇</p>
+<p>blue_mushroom 蓝蘑菇</p>
+<p>mushtree_tall 高蘑菇树</p>
+<p>mushtree_medium 中蘑菇树</p>
+<h3 id="植物"><a href="#植物" class="headerlink" title="植物"></a>植物</h3><p>flower 花</p>
+<p>flower_evil 噩梦花</p>
+<p>carrot_planted 长在地上的胡萝卜</p>
+<p>grass 长在地上的草</p>
+<p>depleted_grass 草根</p>
+<p>dug_grass 长草簇</p>
+<p>sapling 树苗</p>
+<p>dug_sapling 可种的树苗</p>
+<p>berrybush 果树丛</p>
+<p>dug_berrybush 可种的果树丛</p>
+<p>spoiled_food 腐烂食物</p>
+<p>flowersalad 花沙拉</p>
+<p>icecream 冰激淋</p>
+<p>watermelonicle 西瓜冰</p>
+<p>trailmix 干果</p>
+<p>hotchili 咖喱</p>
+<p>guacamole 鳄梨酱</p>
+<p>goatmilk 羊奶</p>
+<p>berrybush2 果树丛2</p>
+<p>dug_berrybush2 可种的果树丛2</p>
+<p>marsh_bush 尖刺灌木</p>
+<p>dug_marsh_bush 可种的尖刺灌木</p>
+<p>reeds 芦苇</p>
+<p>lichen 洞穴苔藓</p>
+<p>cave_fern 蕨类植物</p>
+<p>evergreen 树</p>
+<p>evergreen_sparse 无松果的树</p>
+<p>marsh_tree 针叶树</p>
+<p>marbletree 大理石树</p>
+<p>statueharp 竖琴雕像</p>
+<p>basalt 玄武岩</p>
+<p>basalt_pillar 高玄武岩</p>
+<p>insanityrock 猪王矮柱石</p>
+<p>sanityrock 猪王高柱石</p>
+<p>ruins_chair 远古椅子</p>
+<p>ruins_vase 远古花瓶</p>
+<p>ruins_table 远古桌子</p>
+<p>statuemaxwell 麦斯威尔雕像</p>
+<p>statueglommer 格罗门雕像</p>
+<p>relic 废墟</p>
+<p>ruins_rubble 损毁的废墟</p>
+<p>bishop_nightmare 损坏的雕像</p>
+<p>rook_nightmare 损坏的战车</p>
+<p>knight_nightmare 损坏的骑士</p>
+<p>chessjunk1 损坏的机械1</p>
+<p>chessjunk2 损坏的机械2</p>
+<h3 id="动物"><a href="#动物" class="headerlink" title="动物"></a>动物</h3><p>rabbit 兔子</p>
+<p>perd 火鸡</p>
+<p>crow 乌鸦</p>
+<p>robin 红雀</p>
+<p>robin_winter 雪雀</p>
+<p>butterfly 蝴蝶</p>
+<p>fireflies 萤火虫</p>
+<p>bee 蜜蜂</p>
+<p>killerbee 杀人蜂</p>
+<p>flower_cave 单朵洞穴花</p>
+<p>flower_cave_double 双朵洞穴花</p>
+<p>flower_cave_triple 三朵洞穴花</p>
+<p>tumbleweed 滚草</p>
+<p>cactus 仙人掌</p>
+<p>cactus_flower 仙人掌花</p>
+<p>marsh_plant 水塘边小草</p>
+<p>pond_algae 水藻</p>
+<p>flies 苍蝇</p>
+<p>mosquito 蚊子</p>
+<p>frog 青蛙</p>
+<p>beefalo 牛</p>
+<p>babybeefalo 小牛</p>
+<p>lightninggoat 闪电羊</p>
+<p>pigman 猪人</p>
+<p>pigguard 猪守卫</p>
+<p>bunnyman 兔人</p>
+<p>merm 鱼人</p>
+<p>spider_hider 洞穴蜘蛛</p>
+<p>spider_spitter 喷射蜘蛛</p>
+<p>spider 地面小蜘蛛</p>
+<p>spider_warrior 地面绿蜘蛛</p>
+<p>spiderqueen 蜘蛛女王</p>
+<p>spider_dropper 白蜘蛛</p>
+<p>hound 猎狗</p>
+<p>firehound 红色猎狗</p>
+<p>icehound 冰狗</p>
+<p>tentacle 触手</p>
+<p>tentacle_garden 巨型触手</p>
+<p>leif 树精</p>
+<p>leif_sparse 稀有树精</p>
+<p>walrus 海象</p>
+<p>little_walrus 小海象</p>
+<p>smallbird 小高鸟</p>
+<p>teenbird 青年高鸟</p>
+<p>tallbird 高鸟</p>
+<p>worm 远古虫子</p>
+<p>abigail 阿比盖尔</p>
+<p>ghost 幽灵</p>
+<p>koalefant_summer 夏象</p>
+<p>koalefant_winter 冬象</p>
+<p>penguin 企鹅</p>
+<p>slurtle 蜗牛龟</p>
+<p>snurtle 黏糊虫</p>
+<p>bat 蝙蝠</p>
+<p>rocky 龙虾</p>
+<p>monkey 猴子</p>
+<p>slurper 缀食者</p>
+<p>buzzard 秃鹫</p>
+<p>mole 鼹鼠</p>
+<p>catcoon 浣熊</p>
+<p>knight 发条骑士</p>
+<p>bishop 主教</p>
+<p>rook 战车</p>
+<p>crawlinghorror 爬行暗影怪</p>
+<p>terrorbeak 尖嘴暗影怪</p>
+<p>deerclops 巨鹿</p>
+<p>minotaur 远古守护者</p>
+<p>shadowwaxwell 麦斯威尔黑影小人</p>
+<p>krampus 坎普斯</p>
+<p>glommer 格罗门</p>
+<p>chester 切斯特</p>
+<p>lureplant 食人花</p>
+<p>eyeplant 食人花眼睛</p>
+<p>bigfoot 大脚</p>
+<p>pigking 猪王</p>
+<p>moose 鹿鸭</p>
+<p>mossling 小鸭</p>
+<p>dragonfly 蜻蜓</p>
+<p>warg 座狼</p>
+<p>bearger 熊</p>
+<p>birchnutdrake 坚果鸭</p>
+<p>mooseegg 鹿鸭蛋</p>
+
+        </article>
+        <div class="post-tools" id="post-tools">
+            <div class="post-tools-left">
+                
+                <div class="share-link mobile">
+    <div class="share-qrcode">
+        <div class="share-button" title="使用手机访问这篇文章">
+            <i class="fas fa-qrcode"></i>
+        </div>
+        <div class="share-main">
+            <div class="share-main-all">
+                <div id="qrcode" title="https://www.ryanamigo.com/2023/07/06/dst-server/">
+                </div>
+                <div class="reward-dec">使用手机访问这篇文章</div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            new QRCode(document.getElementById("qrcode"), "https://www.ryanamigo.com/2023/07/06/dst-server/");
+        </script>
+    </div>
+</div>
+                <div class="share-link weibo"><a class="share-button" target="_blank"
+    href="https://service.weibo.com/share/share.php?title=使用docker开饥荒联机版服务器&amp;url=https://www.ryanamigo.com/2023/07/06/dst-server/&amp;pic=https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/dst-cover.jpg"
+    title="分享到微博" rel="noopener external nofollow noreferrer noopener">
+    <i class="fab fa-weibo" style="font-size:22px"></i>
+</a>
+</div>
+<div class="share-link copyurl">
+<div class="share-button" id="post-share-url" title="复制链接" onclick="acrylic.copyPageUrl()">
+    <i class="fas fa-link"></i>
+</div>
+</div>
+            </div>
+            <div class="post-tools-right">
+                <div class="tag_share">
+                    <div class="post-meta__tag-list">
+                        
+                            <a href="/tags/%E9%A5%A5%E8%8D%92/" class="post-meta__tags">
+                                <span class="tags-punctuation">#</span>
+                                饥荒
+                                <span class="tagsPageCount">1</span>
+                            </a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="post-copyright">
+    <div class="post-copyright__author">
+        <a class="post-copyright__original" title="该文章为原创文章，注意版权协议">原创</a>
+        <a class="post-copyright-title" href="#">
+            <span>使用docker开饥荒联机版服务器</span>
+        </a>
+    </div>
+    <div class="post-copyright__type">
+        <span class="post-copyright-info" id="post-copyright-url">
+            <a href="/2023/07/06/dst-server/">https://www.ryanamigo.com/2023/07/06/dst-server/</a>
+        </span>
+        <button class="post-copyright-copybtn" onclick="acrylic.copyPageUrl()">
+            <i class="fas fa-paste copy-btn"></i>
+        </button>
+    </div>
+    <div class="post-copyright__notice"><span class="post-copyright-info">本文是原创文章，采用 <a
+                href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a> 协议，完整转载请注明来自 <a
+                href="/">Ryan&#39;s Blog</a>
+            </span>
+        </div>
+</div>
+        <nav class="pagination-post" id="pagination">
+    
+                
+        
+            <div class="prev-post pull-full">
+                <a href="/2023/07/16/react-solid-principle/">
+                    <div class="pagination-info">
+                        <div class="label">上一篇</div>
+                        <div class="prev_info">react组件的S.O.L.I.D原则</div>
+                    </div>
+                </a>
+            </div>
+        
+    
+</nav>
+            
+    </div>
+    <div class="aside-content" id="aside-content">
+    
+    
+        
+        <div class="card-widget card-info">
+    <div class="card-content">
+        <div class="card-info-avatar is-center">
+            <div class="author-info__sayhi" id="author-info__sayhi">
+            </div>
+            <div class="author-info__name">
+                Ryan
+            </div>
+            <div class="author-info__description">这世界有太多不如意，但你的生活还是要继续。太阳每天依旧要升起，希望永远种在你心里。</div>
+        </div>
+    </div>
+    <div class="banner-button-group">
+        <a class="banner-button" href="/">
+            <i class="fas fa-circle-chevron-right"></i>
+            <span class="banner-button-text">个人主页</span>
+        </a>
+    </div>
+    <div class="card-info-social-icons is-center">
+        
+            <a class="social-icon" href="mailto:yuyan9@111.com" title="Mail">
+                <i class="fa-solid fa-envelope"></i>
+            </a>
+        
+    </div>
+</div>
+     
+    
+    <div class="sticky_layout">
+        
+            <div class="card-widget" id="card-toc">
+    <div class="item-headline">
+        <i class="fas fa-bars"></i>
+        <span>文章目录</span>
+    </div>
+    <div class="toc-content" id="toc-content">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E9%95%9C%E5%83%8F"><span class="toc-text">选择镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-text">启动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-run"><span class="toc-text">docker run</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-compose"><span class="toc-text">docker-compose</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE"><span class="toc-text">服务配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#token"><span class="toc-text">token</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="toc-text">基本信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%91%98"><span class="toc-text">管理员</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mod%E9%85%8D%E7%BD%AE"><span class="toc-text">mod配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0-%E4%B8%8B%E8%BD%BDmod"><span class="toc-text">添加&#x2F;下载mod</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8mod"><span class="toc-text">启用mod</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-text">附录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-text">配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%91%BD%E4%BB%A4"><span class="toc-text">控制台命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%A9%E5%93%81%E4%BB%A3%E7%A0%81"><span class="toc-text">物品代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%90%E6%96%99"><span class="toc-text">材料</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7-%E6%AD%A6%E5%99%A8"><span class="toc-text">工具&#x2F;武器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%85%E5%A4%87"><span class="toc-text">装备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E7%AD%91"><span class="toc-text">建筑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A3%9F%E7%89%A9"><span class="toc-text">食物</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A4%8D%E7%89%A9"><span class="toc-text">植物</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E7%89%A9"><span class="toc-text">动物</span></a></li></ol></li></ol>
+    </div>
+</div>
+            
+        
+            
+        <div class="card-widget card-recent-post">
+    <div class="item-headline">
+        <i class="fas fa-list-ol"></i>
+        <span>最近发布</span>
+    </div>
+    <div class="aside-list">
+        
+        
+            <div class="aside-list-item">
+                <a class="thumbnail" href="/2023/07/16/react-solid-principle/" title="react组件的S.O.L.I.D原则">
+                    <img
+                        alt="react组件的S.O.L.I.D原则"
+                        src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/solid.png">
+                </a>
+                <div class="content">
+                    
+                        <a class="article-recent_post_categories" href="/2023/07/16/react-solid-principle/">
+                            前端
+                        </a>
+                    
+                    <a class="title" href="/2023/07/16/react-solid-principle/" title="react组件的S.O.L.I.D原则">
+                        react组件的S.O.L.I.D原则
+                    </a>
+                </div>
+            </div>
+                
+        
+            <div class="aside-list-item">
+                <a class="thumbnail" href="/2023/07/06/dst-server/" title="使用docker开饥荒联机版服务器">
+                    <img
+                        alt="使用docker开饥荒联机版服务器"
+                        src="https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/dst-cover.jpg">
+                </a>
+                <div class="content">
+                    
+                        <a class="article-recent_post_categories" href="/2023/07/06/dst-server/">
+                            游戏
+                        </a>
+                    
+                    <a class="title" href="/2023/07/06/dst-server/" title="使用docker开饥荒联机版服务器">
+                        使用docker开饥荒联机版服务器
+                    </a>
+                </div>
+            </div>
+                
+        
+    </div>
+</div>
+     
+        
+    </div>
+</div> 
+</main>
+                <footer id="footer">
+                    <div id="footer_deal">
+    
+    <img class="footer_mini_logo" src="/img/avatar.jpeg"
+        title="返回顶部" onclick="acrylic.toTop()">
+    
+</div>    
+<div id="heo-footer">
+    
+        <div class="footer-group">
+            <h3 class="footer-title">导航</h3>
+            <div class="footer-links">
+                
+                    <a class="footer-item" href="/archives/" title="文章归档" rel="noopener external nofollow noreferrer">文章归档</a>
+                
+                    <a class="footer-item" href="/categories/" title="文章分类" rel="noopener external nofollow noreferrer">文章分类</a>
+                
+                    <a class="footer-item" href="/tags/" title="文章标签" rel="noopener external nofollow noreferrer">文章标签</a>
+                    
+            </div>
+        </div>
+    
+        <div class="footer-group">
+            <h3 class="footer-title">Acrylic</h3>
+            <div class="footer-links">
+                
+                    <a class="footer-item" target="_blank" href="https://acrylic.zhheo.com/" title="主题官网" rel="noopener external nofollow noreferrer noopener">主题官网</a>
+                
+                    <a class="footer-item" target="_blank" href="https://github.com/hexo-theme-Acrylic/Hexo-Theme-Acrylic" title="Github" rel="noopener external nofollow noreferrer noopener">Github</a>
+                    
+            </div>
+        </div>
+    
+    
+</div>
+<div id="footer-section">
+    <div class="footer-section-links">
+        <div class="footer-section-left">
+            <div id="footer-section-tips">
+                <div class="copyright">©2023 - 2023 By 
+                    <a class="footer-section-link" href="/" rel="external nofollow">Ryan</a>
+                    <a class="footer-section-link" href="https://github.com/hexo-theme-Acrylic/Hexo-Theme-Acrylic-Next" rel="external nofollow" target="_blank"> Theme By Acrylic-Next</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-section-right">
+            <a class="footer-section-link" href="/rss/">订阅</a>
+            
+            <a class="footer-section-link cc" target="_blank" href="https://creativecommons.org/licenses/by/4.0/" title="cc协议">
+                <i class="fa-solid fa-closed-captioning"></i>
+            </a>
+        </div>
+    </div>
+</div>
+                </footer>
+            </div>
+         
+        <div>
+    <script type="text/javascript" src="/js/utils.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+    
+
+<script src="/lib/pjax.min.js"></script>
+
+
+
+<script src="/lib/snackbar.min.js"></script>
+
+
+    
+<script src="/lib/view-image.min.js"></script>
+
+
+
+<div id="js-pjax">
+    
+     
+</div>
+
+
+    
+<script src="/js/extend/covercolor/web.js"></script>
+
+        
+
+
+    <script>
+  let pjaxSelectors = [
+    'title',
+    '#body-wrap',
+    '#site-config',
+    'meta[name="description"]',
+    '#js-pjax'
+  ]
+  
+  const pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+  })
+
+  document.addEventListener('pjax:error', (e) => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+</script>
+    
+</div>
+        
+     
+        <div class="needEndHide" id="nav-music" onclick="acrylic.musicToggle()">
+    <div id="nav-music-hoverTips">音乐已暂停</div>
+    <meting-js id="1708664797" server="tencent" type="playlist" mutex="true"
+        preload="none" data-lrctype="0" order="random" theme="var(--heo-main)"></meting-js>
+</div>
+    
+    </body>
+</html>
+<script>const posts=["2023/07/16/react-solid-principle/","2023/07/06/dst-server/"];function toRandomPost(){ window.pjax ? pjax.loadUrl('/'+posts[Math.floor(Math.random()*posts.length)]) : window.open('/'+posts[Math.floor(Math.random()*posts.length)], "_self"); };</script>
