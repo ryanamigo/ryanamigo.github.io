@@ -3,6 +3,7 @@ title: react组件的S.O.L.I.D原则
 date: 2023-07-16 10:38:32
 tags:
   - react
+recommend: true
 category:
   - 前端
 cover: https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/solid.png

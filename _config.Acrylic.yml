@@ -91,10 +91,10 @@ hometop:
       url: /tags/游戏/
 
   recommendList:
-    sup: 置顶文章
-    title: 让Acrylic成为您的Hexo主题
-    url: /
-    img: /img/acrylic.png
+    sup: 置顶
+    title: 常用但容易忘记的命令
+    url: /2023/07/19/comm-use-command/
+    img: https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/cowsay.png
     color: '#006a73'
 
 # 个人卡片
