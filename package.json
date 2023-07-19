@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "clean": "hexo clean",
-    "server": "hexo server",
+    "clean": "hexo clean --config hexoconfig.yml",
+    "server": "hexo server --config hexoconfig.yml",
     "new": "hexo new",
     "dev": "hexo generate && hexo server",
     "build": "hexo generate && next build",
     "start": "next start",
-    "generate": "hexo generate"
+    "generate": "hexo generate --config hexoconfig.yml"
   },
   "hexo": {
     "version": "6.3.0"
