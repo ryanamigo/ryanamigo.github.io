@@ -4,7 +4,7 @@
   <url>
     <loc>https://www.ryanamigo.com/2023/07/19/comm-use-command/</loc>
     
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13,7 +13,7 @@
   <url>
     <loc>https://www.ryanamigo.com/2023/09/02/driving-license-1/</loc>
     
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22,7 +22,16 @@
   <url>
     <loc>https://www.ryanamigo.com/2023/07/06/dst-server/</loc>
     
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.ryanamigo.com/2023/09/03/esxi-sync-device/</loc>
+    
+    <lastmod>2023-09-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -31,7 +40,7 @@
   <url>
     <loc>https://www.ryanamigo.com/2023/07/16/react-solid-principle/</loc>
     
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -40,7 +49,7 @@
   <url>
     <loc>https://www.ryanamigo.com/categories/index.html</loc>
     
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -49,7 +58,7 @@
   <url>
     <loc>https://www.ryanamigo.com/draft/hexonext.html</loc>
     
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -58,7 +67,7 @@
   <url>
     <loc>https://www.ryanamigo.com/tags/index.html</loc>
     
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -67,7 +76,7 @@
 
   <url>
     <loc>https://www.ryanamigo.com/</loc>
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -75,28 +84,35 @@
   
   <url>
     <loc>https://www.ryanamigo.com/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C/</loc>
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.ryanamigo.com/tags/%E9%A9%BE%E7%85%A7/</loc>
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.ryanamigo.com/tags/%E9%A5%A5%E8%8D%92/</loc>
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.ryanamigo.com/tags/esxi/</loc>
+    <lastmod>2023-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.ryanamigo.com/tags/react/</loc>
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -105,28 +121,35 @@
   
   <url>
     <loc>https://www.ryanamigo.com/categories/%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.ryanamigo.com/categories/%E5%85%B6%E4%BB%96/</loc>
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.ryanamigo.com/categories/%E6%B8%B8%E6%88%8F/</loc>
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.ryanamigo.com/categories/%E5%AE%B6%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <lastmod>2023-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.ryanamigo.com/categories/%E5%89%8D%E7%AB%AF/</loc>
-    <lastmod>2023-09-02</lastmod>
+    <lastmod>2023-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
