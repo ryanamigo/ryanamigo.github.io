@@ -5,7 +5,7 @@ tags:
   - 驾照
 category:
   - 其他
-cover: https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/17-200I01A62HU.webp
+cover: http://oss.ryanamigo.com/blog/17-200I01A62HU.webp
 ---
 
 科目一冲刺笔记

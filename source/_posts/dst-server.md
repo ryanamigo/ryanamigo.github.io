@@ -5,7 +5,7 @@ tags:
   - 饥荒
 category:
   - 游戏
-cover: https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/dst-cover.jpg
+cover: http://oss.ryanamigo.com/blog/dst-cover.jpg
 ---
 
 ## 选择镜像
@@ -56,7 +56,7 @@ services:
 ### token
 
 饥荒开服需要从Klei获取自己账号的token，获取地址在[这里](https://accounts.klei.com/account/game/servers?game=DontStarveTogether)
-![](https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/dst-1.jpg)
+![](http://oss.ryanamigo.com/blog/dst-1.jpg)
 获取到token后，将token放到`./DoNotStarveTogether/DoNotStarveTogether/Cluster_1/cluster_token.txt`文件中
 
 ### 基本信息
@@ -139,7 +139,7 @@ ServerModSetup("2543193992")
 ServerModSetup("2119742489")
 ```
 方法中的数字是mod的id，在创意工坊页面url的参数中
-![](https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/dst-2.jpg)
+![](http://oss.ryanamigo.com/blog/dst-2.jpg)
 容器启动的时候会去下载这些mod
 
 ### 启用mod

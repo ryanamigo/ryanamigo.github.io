@@ -94,7 +94,7 @@ hometop:
     sup: 置顶
     title: 常用但容易忘记的命令
     url: /2023/07/19/comm-use-command/
-    img: https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/cowsay.png
+    img: http://oss.ryanamigo.com/blog/cowsay.png
     color: '#006a73'
 
 # 个人卡片

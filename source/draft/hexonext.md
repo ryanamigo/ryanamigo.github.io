@@ -5,7 +5,7 @@ tags:
   - hexo
 categories:
   - ['前端']
-cover: https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/hexo-next.jpg
+cover: http://oss.ryanamigo.com/blog/hexo-next.jpg
 ---
 
 hexo使用`warehouse数据库`，也就是一个json文件，运行在node环境。而`next.js`也运行在node服务端，因此可以让`next.js`在服务端执行hexo的api，获取数据，再生成html返回给前端网页。
@@ -20,11 +20,11 @@ hexo使用`warehouse数据库`，也就是一个json文件，运行在node环境
 ```
 分别创建hexo和next两个项目，创建的两个项目文件结构如下
 
-![](https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/hexo-next-project.jpg)
+![](http://oss.ryanamigo.com/blog/hexo-next-project.jpg)
 ## 整合项目
 
 把`hexo`项目的文件夹和`package.json`中的依赖转移到`next`项目中，整合后如下
-![](https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/hexo-next-project2.jpg)
+![](http://oss.ryanamigo.com/blog/hexo-next-project2.jpg)
 
 再修改一些配置
 
@@ -114,7 +114,7 @@ export const getServerSideProps = async () => {
 
 之后可以在控制台看到
 
-![](https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/hexo-next-project3.jpg)
+![](http://oss.ryanamigo.com/blog/hexo-next-project3.jpg)
 
 
 ## 查找文章

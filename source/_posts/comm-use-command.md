@@ -5,7 +5,7 @@ tags:
   - 命令行
 category:
   - 笔记
-cover: https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/cowsay.png
+cover: http://oss.ryanamigo.com/blog/cowsay.png
 ---
 
 记录常用命令，忘了也不用到处找

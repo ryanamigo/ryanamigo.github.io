@@ -6,7 +6,7 @@ tags:
 recommend: true
 category:
   - 前端
-cover: https://ryan-1308859712.cos.ap-beijing.myqcloud.com/blog/solid.png
+cover: http://oss.ryanamigo.com/blog/solid.png
 ---
 没有组件封装的react，一定是屎山代码。
 react组件五个原则
