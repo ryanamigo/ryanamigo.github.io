@@ -3,6 +3,7 @@ https://www.ryanamigo.com/2023/09/02/driving-license-1/
 https://www.ryanamigo.com/2023/07/06/dst-server/
 https://www.ryanamigo.com/2023/09/03/esxi-sync-device/
 https://www.ryanamigo.com/2023/07/16/react-solid-principle/
+https://www.ryanamigo.com/2023/11/15/ui-design/
 https://www.ryanamigo.com/categories/index.html
 https://www.ryanamigo.com/draft/hexonext.html
 https://www.ryanamigo.com/tags/index.html
@@ -12,6 +13,7 @@ https://www.ryanamigo.com/tags/%E9%A9%BE%E7%85%A7/
 https://www.ryanamigo.com/tags/%E9%A5%A5%E8%8D%92/
 https://www.ryanamigo.com/tags/esxi/
 https://www.ryanamigo.com/tags/react/
+https://www.ryanamigo.com/tags/UI/
 https://www.ryanamigo.com/categories/%E7%AC%94%E8%AE%B0/
 https://www.ryanamigo.com/categories/%E5%85%B6%E4%BB%96/
 https://www.ryanamigo.com/categories/%E6%B8%B8%E6%88%8F/
