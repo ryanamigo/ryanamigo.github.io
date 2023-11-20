@@ -1,4 +1,5 @@
 https://www.ryanamigo.com/2023/07/19/comm-use-command/
+https://www.ryanamigo.com/2023/11/18/design-pattern/
 https://www.ryanamigo.com/2023/09/02/driving-license-1/
 https://www.ryanamigo.com/2023/07/06/dst-server/
 https://www.ryanamigo.com/2023/09/03/esxi-sync-device/
